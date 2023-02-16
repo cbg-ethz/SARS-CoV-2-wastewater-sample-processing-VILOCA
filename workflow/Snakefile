@@ -104,9 +104,20 @@ rule run_viloca:
     script:
         "scripts/run_viloca.py"
 
+rule corrected_annotate_vcf:
+    input:
+        fname_snvs_vcf=rules.run_viloca.output.fname_vcf,
+        fname_genbank_file="resources/GCF_009858895.2_ASM985889v3_genomic.gbff",
+    output:
+        fname_snvs_vcf=f"results/{{sample}}/snvs.annotated.vcf",
+    conda:
+        "envs/annotate_vcf.yaml"
+    script:
+        "./scripts/annotate_vcf.py"
+
 rule mutations_of_interest:
     input:
-        fname_results=rules.run_viloca.output.fname_vcf,
+        fname_results=rules.corrected_annotate_vcf.output.fname_snvs_vcf,
     params:
         fname_mutation_definitions=f"resources/mutation_definitions.yaml",
     output:
