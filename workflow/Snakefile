@@ -43,7 +43,7 @@ rule split:
         fname_fastq_R2=f"results/{{sample}}/alignment/reads.R2.fastq",
         fname_fastq_s=f"results/{{sample}}/alignment/reads.singletones.fastq",
     shell:
-        "samtools collate -O {input.fname_bam} | samtools fastq -1 {output.fname_fastq_R1} -2 {output.fname_fastq_R2} -s {output.fname_fastq_s}"
+        "samtools fastq {input.fname_bam} -1 {output.fname_fastq_R1} -2 {output.fname_fastq_R2} -s {output.fname_fastq_s}"
 
 
 rule flash:
