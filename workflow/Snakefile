@@ -98,11 +98,11 @@ rule run_viloca:
         ),
     conda:
         "envs/viloca.yaml"
-    script:
-        "scripts/run_viloca.py"
     resources:
         mem_mb=5000,
         runtime=60 * 4,
+    script:
+        "scripts/run_viloca.py"
 
 rule mutations_of_interest:
     input:
