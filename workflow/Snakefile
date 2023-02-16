@@ -22,8 +22,8 @@ rule all:
 
 rule provide_alignment:
     input:
-        fname_bam=dir_path_samples+f"{{sample}}/alignment/REF_aln_trim.bam",
-        fname_bam_idx=dir_path_samples+f"{{sample}}/alignment/REF_aln_trim.bam.bai",
+        fname_bam=dir_path_samples+f"{{sample}}/alignments/REF_aln_trim.bam",
+        fname_bam_idx=dir_path_samples+f"{{sample}}/alignments/REF_aln_trim.bam.bai",
     output:
         fname_bam=f"results/{{sample}}/alignment/REF_aln_trim.bam",
         fname_bam_idx=f"results/{{sample}}/alignment/REF_aln_trim.bam.bai",
