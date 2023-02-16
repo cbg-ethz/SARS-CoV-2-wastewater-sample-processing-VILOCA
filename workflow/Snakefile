@@ -22,11 +22,11 @@ rule all:
 
 rule provide_alignment:
     input:
-        fname_bam=dir_path_samples+f"{{sample}}/alignments/REF_aln_trim.bam",
-        fname_bam_idx=dir_path_samples+f"{{sample}}/alignments/REF_aln_trim.bam.bai",
+        fname_bam=dir_path_samples+f"{{sample}}/alignments/REF_aln.bam",
+        fname_bam_idx=dir_path_samples+f"{{sample}}/alignments/REF_aln.bam.bai",
     output:
-        fname_bam=f"results/{{sample}}/alignment/REF_aln_trim.bam",
-        fname_bam_idx=f"results/{{sample}}/alignment/REF_aln_trim.bam.bai",
+        fname_bam=f"results/{{sample}}/alignment/REF_aln.bam",
+        fname_bam_idx=f"results/{{sample}}/alignment/REF_aln.bam.bai",
     shell:
         """
         cp {input.fname_bam} {output.fname_bam}
@@ -41,8 +41,9 @@ rule split:
     output:
         fname_fastq_R1=f"results/{{sample}}/alignment/reads.R1.fastq",
         fname_fastq_R2=f"results/{{sample}}/alignment/reads.R2.fastq",
+        fname_fastq_s=f"results/{{sample}}/alignment/reads.singletones.fastq",
     shell:
-        "samtools collate -O {input.fname_bam} | samtools fastq -1 {output.fname_fastq_R1} -2 {output.fname_fastq_R2} -"
+        "samtools collate -O {input.fname_bam} | samtools fastq -1 {output.fname_fastq_R1} -2 {output.fname_fastq_R2} -s {output.fname_fastq_s}"
 
 
 rule flash:
@@ -74,7 +75,7 @@ rule alignment_merged:
         fname_reference=fname_reference,
         fname_fastq_merged=rules.flash.output.fname_fastq_merged,
     output:
-        fname_bam=f"results/{{sample}}/alignment/REF_aln_trim.merged.bam",
+        fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.bam",
     conda:
         "envs/split.yaml"
     shell:
