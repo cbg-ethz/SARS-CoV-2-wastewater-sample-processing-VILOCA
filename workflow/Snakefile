@@ -1,0 +1,133 @@
+import sys
+from pathlib import Path
+
+import pandas as pd
+
+from snakemake.utils import Paramspace
+from snakemake.io import Namedlist
+
+fname_reference = "resources/NC_045512.2.fasta"
+fname_insert_bed = "resources/SARS-CoV-2.insert.reduced.bed"
+fname_samples = "resources/samples.tsv"
+dir_path_samples = "/cluster/project/pangolin/work-vp-test/results/"
+
+df_samples = pd.read_csv(fname_samples, sep="        ", header=None)
+samples = [f"{row[1]}/{row[2]}" for row in df_samples.itertuples()]
+
+# rule definitions
+rule all:
+    input:
+        f"results/mutations_of_interest.csv",
+
+
+rule provide_alignment:
+    input:
+        fname_bam=dir_path_samples+f"{{sample}}/alignment/REF_aln_trim.bam",
+        fname_bam_idx=dir_path_samples+f"{{sample}}/alignment/REF_aln_trim.bam.bai",
+    output:
+        fname_bam=f"results/{{sample}}/alignment/REF_aln_trim.bam",
+        fname_bam_idx=f"results/{{sample}}/alignment/REF_aln_trim.bam.bai",
+    shell:
+        """
+        cp {input.fname_bam} {output.fname_bam}
+        cp {input.fname_bam_idx} {output.fname_bam_idx}
+        """
+
+rule split:
+    conda:
+        "envs/split.yaml"
+    input:
+        fname_bam=rules.provide_alignment.output.fname_bam,
+    output:
+        fname_fastq_R1=f"results/{{sample}}/alignment/reads.R1.fastq",
+        fname_fastq_R2=f"results/{{sample}}/alignment/reads.R2.fastq",
+    shell:
+        "samtools collate -O {input.fname_aln} | samtools fastq -1 {output.fname_fastq_R1} -2 {output.fname_fastq_R2} -"
+
+
+rule flash:
+    input:
+        fname_fastq_R1=rules.split.output.fname_fastq_R1,
+        fname_fastq_R2=rules.split.output.fname_fastq_R2,
+    output:
+        fname_fastq_merged=f"results/{{sample}}/alignment/flash/reads_merged.extendedFrags.fastq",
+        dname_out=directory(
+            f"results/{{sample}}/alignment/flash/"
+        ),
+    conda:
+        "envs/split.yaml"
+    shell:
+        """
+        flash \
+          {input.fname_fastq_R1} \
+          {input.fname_fastq_R2} \
+          -r 250 \
+          -f 400 \
+          -s 40 \
+          --allow-outies \
+          --output-prefix=reads_merged \
+          --output-directory={output.dname_out}
+        """
+
+rule alignment_merged:
+    input:
+        fname_reference=fname_reference,
+        fname_fastq_merged=rules.flash.output.fname_fastq_merged,
+    output:
+        fname_bam=f"results/{{sample}}/alignment/REF_aln_trim.merged.bam",
+    conda:
+        "envs/split.yaml"
+    shell:
+        """
+        bwa index {input.fname_reference}
+        bwa mem {input.fname_reference} {input.fname_fastq_merged} > {output.fname_bam}
+        samtools sort -o {output.fname_bam} {output.fname_bam}
+        """
+
+
+rule run_viloca:
+    input:
+        fname_bam=rules.alignment_merged.output.fname_bam,
+        fname_reference=fname_reference,
+        fname_insert_bed=fname_insert_bed,
+    output:
+        fname_vcf=f"results/{{sample}}/snvs.vcf",
+        dname_work=directory(
+            f"results/{{sample}}/variant_calling/"
+        ),
+    conda:
+        "envs/viloca.yaml"
+    script:
+        "scripts/run_viloca.py"
+
+rule mutations_of_interest:
+    input:
+        fname_results=rules.run_viloca.output.fname_vcf,
+    params:
+        fname_mutation_definitions=f"resources/mutation_definitions.yaml",
+    output:
+        fname_mutations=f"results/{{sample}}/mutations_of_interest.csv",
+
+
+rule collect_mutations_of_interest:
+    input:
+        csv_list=[
+            f"results/{sample}/mutations_of_interest.csv"
+            for sample in samples
+        ],
+    output:
+        fname_result_csv=f"results/mutations_of_interest.csv",
+    params:
+        params=samples,
+    conda:
+        "envs/viloca.yaml"
+    script:
+        "scripts/run_viloca.py"
+
+"""
+rule heatmap_plot:
+    input:
+        fname_csv=f"results/mutations_of_interest.csv"
+    output:
+        fname_heatmap=f"results/summary_heatmap.pdf"
+"""
