@@ -10,6 +10,8 @@ def main(fname_bam, fname_reference, fname_insert_bed, fname_results_snv, dname_
     n_max_haplotypes = 100
     n_mfa_starts = 1
 
+    dname_work.mkdir(parents=True, exist_ok=True)
+
     subprocess.run(
         [
             "shorah",
