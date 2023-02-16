@@ -1,0 +1,44 @@
+variant:
+  long: 'drug_resistance_mutations'
+source:
+  - https://doi.org/10.1101/2022.06.07.495116
+mut:
+  # ORF1ab
+  10202: 'CTT' # Resistance to nirmatrelvir: https://doi.org/10.1101/2022.06.07.495116
+  10550: 'GAA' # Resistance to nirmatrelvir: https://doi.org/10.1101/2022.06.07.495116
+  10553: 'TTA' # Resistance to nirmatrelvir: https://doi.org/10.1101/2022.06.07.495116
+  10214: 'TAT' # Resistance to nirmatrelvir: https://doi.org/10.1101/2022.06.07.495116
+  10466: 'GGT' # Resistance to nirmatrelvir: https://doi.org/10.1101/2022.06.07.495116
+  10553: 'TTA' # Resistance to nirmatrelvir: https://doi.org/10.1101/2022.06.07.495116
+  10628: 'CAA' # Resistance to nirmatrelvir: https://doi.org/10.1101/2022.06.07.495116
+  10634: 'GCT' # Resistance to nirmatrelvir: https://doi.org/10.1101/2022.06.07.495116
+  10967: 'TTC' # Resistance to nirmatrelvir: https://doi.org/10.1101/2022.06.07.495116
+  15844: 'GAG' # Resistance to Remdesivir (in vivo) https://doi.org/10.1038/s41467-022-29104-y
+  13936: 'GTA' # Resistance to Remdesivir (in vivo) https://journals.asm.org/doi/10.1128/aac.00198-22
+  15814: 'GTT' # Resistance to Remdesivir (in vivo/vitro) https://www.researchsquare.com/article/rs-1800050/v1 (https://www.science.org/doi/10.1126/scitranslmed.abo0718)
+  15715: 'TCT' # Resistance to Remdesivir (in vivo) https://www.science.org/doi/10.1126/scitranslmed.abo0718
+
+
+# Mutations of interest in the spike protein. In order of decreasing relevance based on the estimated epitope binding site (Dong et al. 2021)
+# R346mut
+# K444mut
+# E484mut
+# N440mut
+# Y489mut
+
+mut:
+  22598: "R346mut"
+  22599: "R346mut"
+  22560: "R346mut"
+  22892: "K444mut"
+  22893: "K444mut"
+  22894: "K444mut"
+  23012: "E484mut"
+  23013: "E484mut"
+  23014: "E484mut"
+  22880: "N440mut"
+  22881: "N440mut"
+  22882: "N440mut"
+  23027: "Y489mut"
+  23028: "Y489mut"
+  23029: "Y489mut"
