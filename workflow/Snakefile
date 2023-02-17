@@ -11,13 +11,45 @@ fname_insert_bed = "resources/SARS-CoV-2.insert.bed"
 fname_samples = "resources/samples.tsv"
 dir_path_samples = "/cluster/project/pangolin/work-vp-test/results/"
 
+region_of_interest=(9500, 23000)
+
 df_samples = pd.read_csv(fname_samples, sep="        ", header=None)
-samples = [f"{row[1]}/{row[2]}" for row in df_samples.itertuples()]
+all_samples = [f"{row[1]}/{row[2]}" for row in df_samples.itertuples()]
 
 # rule definitions
 rule all:
     input:
         f"results/mutations_of_interest.csv",
+
+
+rule copy_coverage_file:
+    input:
+        fname_coverage=dir_path_samples+f"{{sample}}/alignments/coverage.tsv.gz",
+    output:
+        fname_coverage_zipped=f"results/{{sample}}/alignment/coverage.tsv.gz",
+        fname_coverage=f"results/{{sample}}/alignment/coverage.tsv",
+    shell:
+        """
+        cp {input.fname_coverage} {output.fname_coverage}
+        gunzip {output.fname_coverage}
+        """
+
+rule check_coverage:
+    input:
+        fnames_coverage=[
+            dir_path_samples+f"{sample}/alignments/coverage.tsv"
+            for sample in all_samples
+        ],
+    output:
+        fname_samples=f"results/samples.processsed.csv",
+        fname_bad_cov_samples=f"results/samples.bad_coverage.csv",
+    params:
+        region_of_interest=region_of_interest,
+        samples=all_samples,
+    conda:
+        "envs/annotate_vcf.yaml"
+    script:
+        "./scripts/check_coverage.py"
 
 
 rule provide_alignment:
@@ -91,11 +123,14 @@ rule run_viloca:
         fname_bam=rules.alignment_merged.output.fname_bam,
         fname_reference=fname_reference,
         fname_insert_bed=fname_insert_bed,
+        fname_bad_samples= rules.check_coverage.output.fname_bad_cov_samples,
     output:
         fname_vcf=f"results/{{sample}}/snvs.vcf",
         dname_work=directory(
             f"results/{{sample}}/variant_calling/"
         ),
+    params:
+        sample= lambda wc: wc.get("sample")
     conda:
         "envs/viloca.yaml"
     resources:
@@ -128,12 +163,12 @@ rule collect_mutations_of_interest:
     input:
         csv_list=[
             f"results/{sample}/mutations_of_interest.csv"
-            for sample in samples
+            for sample in all_samples
         ],
     output:
         fname_result_csv=f"results/mutations_of_interest.csv",
     params:
-        params=samples,
+        params=all_samples,
     conda:
         "envs/viloca.yaml"
     script:
