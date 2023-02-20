@@ -13,7 +13,7 @@ def main(fname_bam, fname_reference, fname_insert_bed, fname_results_snv, dname_
         open(fname_results_snv, 'a').close()
 
     else:
-        
+
         alpha = 0.000001
         n_max_haplotypes = 100
         n_mfa_starts = 1
@@ -36,8 +36,11 @@ def main(fname_bam, fname_reference, fname_insert_bed, fname_results_snv, dname_
                 str(n_max_haplotypes),
                 "--n_mfa_starts",
                 str(n_mfa_starts),
-                "--insert-file",
-                fname_insert_bed.resolve(),
+                "-w",
+                str(249),
+                "--region",
+                "NC_045512.2:9500-25000",
+
             ],
             cwd=dname_work,
         )
