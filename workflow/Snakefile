@@ -30,7 +30,7 @@ rule copy_coverage_file:
         fname_coverage=f"results/{{sample}}/alignment/coverage.tsv",
     shell:
         """
-        cp {input.fname_coverage} {output.fname_coverage}
+        cp {input.fname_coverage} {output.fname_coverage_zipped}
         gunzip {output.fname_coverage}
         """
 
