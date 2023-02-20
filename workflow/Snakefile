@@ -27,11 +27,19 @@ rule copy_coverage_file:
         fname_coverage=dir_path_samples+f"{{sample}}/alignments/coverage.tsv.gz",
     output:
         fname_coverage_zipped=f"results/{{sample}}/alignment/coverage.tsv.gz",
-        fname_coverage=f"results/{{sample}}/alignment/coverage.tsv",
     shell:
         """
         cp {input.fname_coverage} {output.fname_coverage_zipped}
-        gunzip {output.fname_coverage}
+        """
+
+rule unzip_coverage_file:
+    input:
+        fname_coverage_zipped=f"results/{{sample}}/alignment/coverage.tsv.gz",
+    output:
+        fname_coverage=f"results/{{sample}}/alignment/coverage.tsv",
+    shell:
+        """
+        gunzip {input.fname_coverage_zipped}
         """
 
 rule check_coverage:
