@@ -145,7 +145,7 @@ rule run_viloca:
     threads: 10,
     resources:
         mem_mb=20000,
-        runtime=60 * 12,
+        runtime=60 * 48,
     script:
         "scripts/run_viloca.py"
 
