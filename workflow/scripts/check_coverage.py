@@ -13,7 +13,7 @@ def main(fnames_coverage, region_of_interest, samples, fname_good_samples, fname
     region_list = list(range(start_region, end_region))
 
     for file, sample in zip(fnames_coverage, samples):
-        df = pd.read_csv(file, , sep='\t')
+        df = pd.read_csv(file, sep='\t')
         df = df.loc[df['pos'].isin(region_list)]
 
         if df[sample].mean() < 100:
