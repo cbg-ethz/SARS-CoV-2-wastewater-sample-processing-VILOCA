@@ -73,6 +73,19 @@ rule provide_alignment:
         cp {input.fname_bam_idx} {output.fname_bam_idx}
         """
 
+rule subsample_alignment:
+    input:
+        fname_bam=rules.provide_alignment.output.fname_bam,
+        fname_coverage=rules.unzip_coverage_file.output.fname_coverage,
+    output:
+        fname_bam=f"results/{{sample}}/alignment/REF_aln_trim.subsampled.bam",
+    params:
+        sample= lambda wc: wc.get("sample")
+    conda:
+        "envs/split.yaml"
+    script:
+        "./scripts/check_coverage.py"
+
 rule split:
     conda:
         "envs/split.yaml"
@@ -128,7 +141,7 @@ rule alignment_merged:
 
 rule run_viloca:
     input:
-        fname_bam=f"results/{{sample}}/alignment/REF_aln_trim.bam",
+        fname_bam=f"results/{{sample}}/alignment/REF_aln_trim.subsampled.bam",
         #fname_bam=rules.alignment_merged.output.fname_bam,
         fname_reference=fname_reference,
         fname_insert_bed=fname_insert_bed,
