@@ -7,8 +7,8 @@ cluster:
     --mem-per-cpu="$(( {resources.mem_mb} / {threads} ))"
     --time="{resources.runtime}"
     --tmp={resources.disk_mb}
-    --output=logs/{rule}/{rule}-%j.out.log
-    --error=logs/{rule}/{rule}-%j.err.log
+    --output=logs/{rule}/{rule}-{wildcards}-%j.out.log
+    --error=logs/{rule}/{rule}-{wildcards}-%j.err.log
 default-resources:
         # - partition=<name-of-default-partition>
         # - qos=<name-of-quality-of-service>
