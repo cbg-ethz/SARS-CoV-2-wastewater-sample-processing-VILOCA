@@ -25,7 +25,7 @@ def subsample(fname_bam_in, fname_bam_out , subsample_proportion):
         ],
     )
 
-def get_subsample_proportion(fname_coverage, sample, coverage_threshold=500000):
+def get_subsample_proportion(fname_coverage, sample, coverage_threshold=100000):
     """
     viloca threshold is coverage_threshold=1000000
     """
@@ -39,9 +39,9 @@ def get_subsample_proportion(fname_coverage, sample, coverage_threshold=500000):
         return coverage_threshold/max_coverage
 
 
-def main(fname_bam_in, fname_bam_out, fname_coverage, sample):
+def main(fname_bam_in, fname_bam_out, fname_coverage, sample, coverage_threshold):
 
-    subsample_proportion = get_subsample_proportion(fname_coverage, sample)
+    subsample_proportion = get_subsample_proportion(fname_coverage, sample, coverage_threshold)
     if subsample_proportion==1:
         os.rename(fname_bam_in, fname_bam_out)
     else:
@@ -54,4 +54,5 @@ if __name__ == "__main__":
         snakemake.output.fname_bam,
         snakemake.input.fname_coverage,
         snakemake.params.sample,
+        snakemake.params.coverage_threshold,
     )

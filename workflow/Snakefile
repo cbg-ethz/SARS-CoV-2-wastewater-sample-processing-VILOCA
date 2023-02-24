@@ -80,7 +80,8 @@ rule subsample_alignment:
     output:
         fname_bam=f"results/{{sample}}/alignment/REF_aln_trim.subsampled.bam",
     params:
-        sample= lambda wc: wc.get("sample")
+        sample= lambda wc: wc.get("sample"),
+        coverage_threshold=100000
     conda:
         "envs/split.yaml"
     script:
