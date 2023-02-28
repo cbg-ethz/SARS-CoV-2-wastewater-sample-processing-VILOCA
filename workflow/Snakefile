@@ -85,7 +85,7 @@ rule subsample_alignment:
     conda:
         "envs/split.yaml"
     script:
-        "./scripts/check_coverage.py"
+        "./scripts/subsample_aln.py"
 
 rule split:
     conda:
