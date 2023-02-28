@@ -16,7 +16,7 @@ def subsample(fname_bam_in, fname_bam_out , subsample_proportion):
         [
             "samtools",
             "view",
-            "--subsample",
+            "-s",
             str(subsample_proportion),
             "-b",
             str(fname_bam_in),
