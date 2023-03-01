@@ -1,9 +1,10 @@
 channels:
+  - /cluster/work/bewi/members/lfuhrmann/test_libshorah/LinuxArtifacts/packages
   - conda-forge
-  - bioconda
   - defaults
 dependencies:
+  - libshorah
   - python=3.10
-  - boost
-  - htslib
-  - poetry
+  - pip
+  - pip:
+    - git+https://github.com/LaraFuhrmann/shorah@feat-wp1.1
