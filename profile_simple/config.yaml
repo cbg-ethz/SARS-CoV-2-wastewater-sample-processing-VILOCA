@@ -2,7 +2,7 @@ cluster:
   mkdir -p logs/{rule} &&
   sbatch
     --parsable
-    --job-name=local-haplo-benchmark-{rule}-{wildcards}
+    --job-name=wastewater-{rule}-{wildcards}
     --cpus-per-task={threads}
     --mem-per-cpu="$(( {resources.mem_mb} / {threads} ))"
     --time="{resources.runtime}"
