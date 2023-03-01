@@ -1,10 +1,11 @@
+name: libshorah_cmp
 channels:
-  - /cluster/work/bewi/members/lfuhrmann/wastewater_samples_viloca/SARS-CoV-2-wastewater-sample-processing-VILOCA/resources/LinuxArtifacts/packages
-  - conda-forge
-  - defaults
+ - /cluster/work/bewi/members/lfuhrmann/test_libshorah/LinuxArtifacts/packages
+ - conda-forge
+ - bioconda
 dependencies:
-  - libshorah
-  - python=3.10
-  - pip
-  - pip:
-    - git+https://github.com/LaraFuhrmann/shorah@feat-wp1.1
+ - libshorah
+ - python=3.10
+ - pip
+ - pip:
+   - git+https://github.com/LaraFuhrmann/shorah@feat-wp1.1
