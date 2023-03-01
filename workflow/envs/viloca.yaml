@@ -1,5 +1,5 @@
 channels:
-  - /cluster/work/bewi/members/lfuhrmann/test_libshorah/LinuxArtifacts/packages
+  - /cluster/work/bewi/members/lfuhrmann/wastewater_samples_viloca/SARS-CoV-2-wastewater-sample-processing-VILOCA/resources/LinuxArtifacts/packages
   - conda-forge
   - defaults
 dependencies:
