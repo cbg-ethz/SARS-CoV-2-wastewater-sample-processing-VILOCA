@@ -2,7 +2,7 @@ name: libshorah_cmp
 channels:
  - conda-forge
  - bioconda
-- defaults
+ - defaults
 dependencies:
  - libshorah
  - python=3.10
