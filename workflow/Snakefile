@@ -7,7 +7,7 @@ from snakemake.utils import Paramspace
 from snakemake.io import Namedlist
 
 fname_reference = "resources/NC_045512.2.fasta"
-fname_insert_bed = "resources/SARS-CoV-2.insert.bed"
+fname_insert_bed = "resources/SARS-CoV-2.insert.reduced.bed"
 fname_samples = "resources/samples.tsv"
 dir_path_samples = "/cluster/project/pangolin/work-vp-test/results/"
 
