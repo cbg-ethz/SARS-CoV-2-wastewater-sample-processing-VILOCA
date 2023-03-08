@@ -36,12 +36,12 @@ def main(fname_bam, fname_reference, fname_insert_bed, fname_results_snv, dname_
                 str(n_max_haplotypes),
                 "--n_mfa_starts",
                 str(n_mfa_starts),
-                "-z",
-                str(fname_insert_bed),
+                #"-z",
+                #str(fname_insert_bed), # amplicon mode doesn't work because we couldn't merge reverse and forward reads
                 #"-w",
                 #str(249),
-                #"--region",
-                #"NC_045512.2:9500-25000",
+                "--region",
+                "NC_045512.2:10099-23327",
 
             ],
             cwd=dname_work,
