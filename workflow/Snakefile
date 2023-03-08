@@ -156,10 +156,11 @@ rule run_viloca:
         sample= lambda wc: wc.get("sample")
     conda:
         "envs/viloca.yaml"
+    threads: 10,
     resources:
         mem_mb=100000,
         runtime=5760,
-        threads: 10,
+        #threads: 10,
     script:
         "scripts/run_viloca.py"
 
