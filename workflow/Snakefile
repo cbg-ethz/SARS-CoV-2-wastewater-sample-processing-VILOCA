@@ -217,6 +217,22 @@ rule collect_mutations_of_interest:
     script:
         "scripts/collect_mutations.py"
 
+
+rule collect_mutations_of_interest_raw:
+    input:
+        csv_list=[
+            f"results/{sample}/mutations_of_interest.raw.csv"
+            for sample in all_samples
+        ],
+    output:
+        fname_result_csv=f"results/mutations_of_interest.raw.csv",
+    params:
+        params=all_samples,
+    conda:
+        "envs/viloca.yaml"
+    script:
+        "scripts/collect_mutations.py"
+
 """
 rule heatmap_plot:
     input:
