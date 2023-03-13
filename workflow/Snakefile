@@ -20,6 +20,7 @@ all_samples = [f"{row[1]}/{row[2]}" for row in df_samples.itertuples()]
 rule all:
     input:
         f"results/mutations_of_interest.csv",
+        f"results/mutations_of_interest.raw.csv",
 
 
 rule copy_coverage_file:
