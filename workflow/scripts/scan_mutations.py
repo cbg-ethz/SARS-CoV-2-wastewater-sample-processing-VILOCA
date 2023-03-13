@@ -29,7 +29,7 @@ def main(fname_vcf, fname_csv, fname_yaml):
     positions_of_interest = [int(x) for x in list(dict_mut.keys())]
 
     # vcf into dataframe
-    df_vcf = pyvcf.VcfFrame.from_file(f_snv_vcf).df
+    df_vcf = pyvcf.VcfFrame.from_file(fname_vcf).df
 
     df_mut = df_vcf[df_vcf['POS'].isin(positions_of_interest)]
 
