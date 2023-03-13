@@ -37,6 +37,8 @@ def main(fname_vcf, fname_csv, fname_yaml):
         df_vcf = pd.read_csv(fname_vcf, sep='\t')
         if df_vcf.shape[0]>0:
             df_mut = df_vcf[df_vcf['Pos'].isin(positions_of_interest)]
+        else:
+            df_mut = df_vcf
 
     df_mut.to_csv(fname_csv)
 
