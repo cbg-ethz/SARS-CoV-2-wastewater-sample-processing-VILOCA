@@ -168,7 +168,7 @@ rule run_viloca:
 
 rule scan_raw_snv:
     input:
-        fname_raw_snv=rules.run_viloca.output.fname_raw,
+        fname_snvs_vcf=rules.run_viloca.output.fname_raw,
     params:
         fname_mutation_definitions=f"resources/mutation_definitions.yaml",
     output:
