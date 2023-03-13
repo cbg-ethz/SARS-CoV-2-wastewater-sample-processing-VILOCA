@@ -33,7 +33,7 @@ def main(fname_vcf, fname_csv, fname_yaml):
         df_vcf = pyvcf.VcfFrame.from_file(fname_vcf).df
         df_mut = df_vcf[df_vcf['POS'].isin(positions_of_interest)]
 
-    elif  fname_vcf.split(".")[-1]=="csv":
+    elif  fname_vcf.split(".")[-1]=="tsv":
         df_vcf = pd.read_csv(fname_vcf)
         df_mut = df_vcf[df_vcf['Pos'].isin(positions_of_interest)]
 
