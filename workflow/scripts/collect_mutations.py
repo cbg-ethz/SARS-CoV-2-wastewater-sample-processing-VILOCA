@@ -35,6 +35,7 @@ def main(csv_list, fname_result_csv, params):
 
     df = concat_files(csv_list, params)
     df= df.reset_index()
+    print(df)
 
     df = split_INFO(df)
     df.to_csv(fname_result_csv)
