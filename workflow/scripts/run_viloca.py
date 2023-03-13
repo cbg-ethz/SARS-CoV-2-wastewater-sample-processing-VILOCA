@@ -10,7 +10,9 @@ def main(fname_bam, fname_reference, fname_insert_bed, fname_results_snv, dname_
     bad_samples = pd.read_csv(fname_bad_samples)['sample'].values.tolist()
 
     if sample in bad_samples:
-        open(fname_results_snv, 'a').close()
+        with open(fname_results_snv.resolve(), 'w') as f:
+            f.write('#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO')
+        #f.close()
 
     else:
 
