@@ -34,7 +34,7 @@ def main(fname_vcf, fname_csv, fname_yaml):
         df_mut = df_vcf[df_vcf['POS'].isin(positions_of_interest)]
 
     elif  fname_vcf.split(".")[-1]=="tsv":
-        df_vcf = pd.read_csv(fname_vcf)
+        df_vcf = pd.read_csv(fname_vcf, sep='\t')
         df_mut = df_vcf[df_vcf['Pos'].isin(positions_of_interest)]
 
     df_mut.to_csv(fname_csv)
