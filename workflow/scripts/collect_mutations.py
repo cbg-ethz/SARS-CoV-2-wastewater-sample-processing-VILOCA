@@ -26,5 +26,5 @@ if __name__ == "__main__":
     main(
         snakemake.input.csv_list,
         snakemake.output.fname_result_csv,
-        params.params,
+        snakemake.params.params,
         )
