@@ -20,7 +20,7 @@ all_samples = [f"{row[1]}/{row[2]}" for row in df_samples.itertuples()]
 rule all:
     input:
         f"results/mutations_of_interest.csv",
-        f"results/mutations_of_interest.raw.csv",
+        #f"results/mutations_of_interest.raw.csv",
 
 
 rule copy_coverage_file:
@@ -150,7 +150,7 @@ rule run_viloca:
         fname_bad_samples= rules.check_coverage.output.fname_bad_cov_samples,
     output:
         fname_vcf=f"results/{{sample}}/snvs.vcf",
-        fname_raw=f"results/{{sample}}/variant_calling/snv/raw_snv.tsv",
+        #fname_raw=f"results/{{sample}}/variant_calling/snv/raw_snv.tsv",
         dname_work=directory(
             f"results/{{sample}}/variant_calling/"
         ),
