@@ -42,7 +42,8 @@ def main(fname_bam, fname_reference, fname_insert_bed, fname_results_snv, dname_
                 #str(249),
                 "--region",
                 "NC_045512.2:10099-23327",
-
+                "--min_windows_coverage",
+                "1",
             ],
             cwd=dname_work,
         )
