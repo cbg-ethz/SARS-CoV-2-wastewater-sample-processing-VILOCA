@@ -9,4 +9,4 @@ dependencies:
  - pandas
  - pip
  - pip:
-   - git+https://github.com/LaraFuhrmann/shorah@feat-wp1.1
+   - git+https://github.com/LaraFuhrmann/shorah@master
