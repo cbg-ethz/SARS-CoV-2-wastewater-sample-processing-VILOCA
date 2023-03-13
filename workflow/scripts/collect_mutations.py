@@ -19,7 +19,10 @@ def concat_files(in_files_list, params):
 def split_INFO(df_temp):
     # get parameters
     df_temp['INFO_list'] = df_temp['INFO'].str.split(";")
-    parameter_list = [ parameter.split('=')[0] for parameter in df_temp['INFO_list'][0]]
+    first_row_INFO_list = df_temp['INFO_list'][0]
+    print(first_row_INFO_list)
+    print(first_row_INFO_list[0])
+    parameter_list = [param_info.split('=')[0] for param_info in first_row_INFO_list]
     for param in parameter_list:
         df_temp[param]=' '
 
