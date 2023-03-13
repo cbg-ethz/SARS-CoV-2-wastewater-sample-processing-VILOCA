@@ -28,10 +28,14 @@ def main(fname_vcf, fname_csv, fname_yaml):
     dict_mut = parse_yaml(fname_yaml)
     positions_of_interest = [int(x) for x in list(dict_mut.keys())]
 
-    # vcf into dataframe
-    df_vcf = pyvcf.VcfFrame.from_file(fname_vcf).df
+    if fname_vcf.split(".")[-1]=="vcf":
+        # vcf into dataframe
+        df_vcf = pyvcf.VcfFrame.from_file(fname_vcf).df
+        df_mut = df_vcf[df_vcf['POS'].isin(positions_of_interest)]
 
-    df_mut = df_vcf[df_vcf['POS'].isin(positions_of_interest)]
+    elif  fname_vcf.split(".")[-1]=="csv":
+        df_vcf = pd.read_csv(fname_vcf)
+        df_mut = df_vcf[df_vcf['Pos'].isin(positions_of_interest)]
 
     df_mut.to_csv(fname_csv)
 
