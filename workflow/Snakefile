@@ -177,7 +177,7 @@ rule annotate_vcf:
 
 rule mutations_of_interest:
     input:
-        fname_results=rules.annotate_vcf.output.fname_snvs_vcf,
+        fname_snvs_vcf=rules.annotate_vcf.output.fname_snvs_vcf,
     params:
         fname_mutation_definitions=f"resources/mutation_definitions.yaml",
     output:
@@ -201,7 +201,7 @@ rule collect_mutations_of_interest:
     conda:
         "envs/viloca.yaml"
     script:
-        "scripts/run_viloca.py"
+        "scripts/collect_mutations.py"
 
 """
 rule heatmap_plot:
