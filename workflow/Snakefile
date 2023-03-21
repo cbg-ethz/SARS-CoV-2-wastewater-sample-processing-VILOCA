@@ -74,21 +74,6 @@ rule provide_alignment:
         cp {input.fname_bam_idx} {output.fname_bam_idx}
         """
 
-rule subsample_alignment:
-    input:
-        #fname_bam=rules.provide_alignment.output.fname_bam,
-        fname_bam=rules.alignment_merged.output.fname_bam,
-        fname_coverage=rules.unzip_coverage_file.output.fname_coverage,
-    output:
-        fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.subsampled.bam",
-    params:
-        sample= lambda wc: wc.get("sample"),
-        coverage_threshold=200000
-    conda:
-        "envs/split.yaml"
-    script:
-        "./scripts/subsample_aln.py"
-
 rule split:
     conda:
         "envs/split.yaml"
@@ -140,6 +125,20 @@ rule alignment_merged:
         bwa mem {input.fname_reference} {input.fname_fastq_merged} > {output.fname_bam}
         samtools sort -o {output.fname_bam} {output.fname_bam}
         """
+
+rule subsample_alignment:
+    input:
+        fname_bam=rules.alignment_merged.output.fname_bam,
+        fname_coverage=rules.unzip_coverage_file.output.fname_coverage,
+    output:
+        fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.subsampled.bam",
+    params:
+        sample= lambda wc: wc.get("sample"),
+        coverage_threshold=200000
+    conda:
+        "envs/split.yaml"
+    script:
+        "./scripts/subsample_aln.py"
 
 
 rule run_viloca:
