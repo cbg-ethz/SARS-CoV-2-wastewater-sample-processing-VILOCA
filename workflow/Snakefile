@@ -128,6 +128,8 @@ rule alignment_merged:
         samtools sort -o {output.fname_bam} {output.fname_bam}
         """
 
+# TODO: integrate this tool for capping at a given coverage
+# https://lindenb.github.io/jvarkit/Biostar154220.html
 rule subsample_alignment:
     input:
         fname_bam=rules.alignment_merged.output.fname_bam,
