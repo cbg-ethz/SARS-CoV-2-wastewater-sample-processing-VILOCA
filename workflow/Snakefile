@@ -103,9 +103,11 @@ rule flash:
         flash \
           {input.fname_fastq_R1} \
           {input.fname_fastq_R2} \
-          -r 250 \
+          -r 200 \
           -f 400 \
-          -s 40 \
+          -s 60 \
+          -x 0.001 \
+          -m 1 \
           --allow-outies \
           --output-prefix=reads_merged \
           --output-directory={output.dname_out}
