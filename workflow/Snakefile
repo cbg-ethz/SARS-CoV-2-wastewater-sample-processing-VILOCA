@@ -223,6 +223,22 @@ rule collect_mutations_of_interest:
     script:
         "scripts/collect_mutations.py"
 
+rule collect_all_annotated_mutations:
+    input:
+        vcf_list=[
+            f"results/{sample}/snvs.annotated.vcf"
+            for sample in all_samples
+        ],
+    output:
+        fname_result_csv=f"results/all_mutations.csv",
+    params:
+        params=all_samples,
+    conda:
+        "envs/annotate_vcf.yaml"
+    script:
+        "./scripts/collect_all_annotated_mutations.py"
+
+
 """
 rule collect_mutations_of_interest_raw:
     input:
