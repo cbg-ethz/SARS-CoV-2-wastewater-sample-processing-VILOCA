@@ -2,7 +2,7 @@ cluster:
   mkdir -p logs/{rule} &&
   sbatch
     --parsable
-    --job-name=wastewater-{rule}-{wildcards}
+    --job-name=setup_emergence_new_variant-{rule}-{wildcards}
     --cpus-per-task={threads}
     --mem-per-cpu="$(( {resources.mem_mb} / {threads} ))"
     --time="{resources.runtime}"
