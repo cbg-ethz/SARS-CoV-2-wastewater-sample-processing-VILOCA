@@ -24,7 +24,7 @@ rule all:
     default_target: True
 
 # other output
-use rule run_viloca from wastewater_processing as wastewater_processing_run_viloca with::
+use rule run_viloca from wastewater_processing as wastewater_processing_run_viloca with:
     input:
         fname_bam=rules.alignment_merged.output.fname_bam,
         fname_reference=fname_reference,
