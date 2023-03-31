@@ -11,8 +11,6 @@ fname_insert_bed = "resources/SARS-CoV-2.insert.bed"
 fname_samples = "resources/samples.tsv"
 dir_path_samples = "/cluster/project/pangolin/work-vp-test/results/"
 
-region_of_interest=(9500, 23000)
-
 df_samples = pd.read_csv(fname_samples, sep="        ", header=None, comment="#")
 all_samples = [f"{row[1]}/{row[2]}" for row in df_samples.itertuples()]
 
