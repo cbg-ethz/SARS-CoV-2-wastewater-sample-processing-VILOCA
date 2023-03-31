@@ -37,11 +37,7 @@ use rule run_viloca from wastewater_processing as wastewater_processing_run_vilo
         ),
     params:
         sample= lambda wc: wc.get("sample")
-    conda:
-        "envs/viloca.yaml"
     resources:
         mem_mb=100000,
         runtime=5760,
         threads=20,
-    script:
-        "scripts/run_viloca.py"
