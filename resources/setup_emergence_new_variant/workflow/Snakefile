@@ -7,8 +7,8 @@ fname_insert_bed = "../SARS-CoV-2.insert.bed"
 module wastewater_processing:
     snakefile:
         "../../../workflow/Snakefile"
-    replace_prefix:
-        {"resources/": "resources/setup_emergence_new_variant/resources/"}
+    #replace_prefix:
+    #    {"resources/": "resources/setup_emergence_new_variant/resources/"}
 
 use rule * from wastewater_processing as wastewater_processing_*
 
