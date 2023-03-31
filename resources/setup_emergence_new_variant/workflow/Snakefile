@@ -1,0 +1,47 @@
+import pandas as pd
+
+fname_samples = "resources/samples.csv"
+fname_reference = "../NC_045512.2.fasta"
+fname_insert_bed = "../SARS-CoV-2.insert.bed"
+
+# get samples of interest
+df_samples = pd.read_csv(fname_samples, comment="#")
+all_samples = [f"{row["sample"]}/{row["batch"]}" for row in df_samples.itertuples()]
+
+
+module wastewater_processing:
+    snakefile:
+        "../../../workflow/Snakefile"
+
+use rule * from wastewater_processing as wastewater_processing_*
+
+
+rule all:
+    input:
+        [ f"results/{sample}/variant_calling/snv/cooccurring_mutations.csv"
+            for sample in all_samples
+        ],
+    default_target: True
+
+# other output
+rule run_viloca:
+    input:
+        fname_bam=rules.alignment_merged.output.fname_bam,
+        fname_reference=fname_reference,
+        fname_insert_bed=fname_insert_bed,
+        fname_bad_samples= rules.check_coverage.output.fname_bad_cov_samples,
+    output:
+        fname_csv=f"results/{{sample}}/variant_calling/snv/cooccurring_mutations.csv",
+        dname_work=directory(
+            f"results/{{sample}}/variant_calling/"
+        ),
+    params:
+        sample= lambda wc: wc.get("sample")
+    conda:
+        "envs/viloca.yaml"
+    resources:
+        mem_mb=100000,
+        runtime=5760,
+        threads: 10,
+    script:
+        "scripts/run_viloca.py"
