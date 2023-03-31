@@ -51,7 +51,6 @@ rule check_coverage:
         fname_samples=f"results/samples.processsed.csv",
         fname_bad_cov_samples=f"results/samples.bad_coverage.csv",
     params:
-        region_of_interest=region_of_interest,
         samples=all_samples,
     conda:
         "envs/annotate_vcf.yaml"
