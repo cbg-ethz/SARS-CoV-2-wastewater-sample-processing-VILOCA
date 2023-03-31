@@ -24,7 +24,7 @@ rule all:
     default_target: True
 
 # other output
-rule run_viloca:
+use rule run_viloca from wastewater_processing as wastewater_processing_run_viloca with::
     input:
         fname_bam=rules.alignment_merged.output.fname_bam,
         fname_reference=fname_reference,
@@ -39,9 +39,9 @@ rule run_viloca:
         sample= lambda wc: wc.get("sample")
     conda:
         "envs/viloca.yaml"
-    threads: 20,
     resources:
         mem_mb=100000,
         runtime=5760,
+        threads=20,
     script:
         "scripts/run_viloca.py"
