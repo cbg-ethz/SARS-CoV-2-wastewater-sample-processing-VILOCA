@@ -5,7 +5,7 @@ fname_samples = dir_path+"resources/samples.csv"
 fname_reference = "resources/NC_045512.2.fasta"
 fname_insert_bed = "resources/SARS-CoV-2.insert.bed"
 
-all_samples = [f"{row[1]}/{row[2]}" for row in pd.read_csv(fname_samples, comment="#").itertuples()]
+all_samples = [f"{row[2]}/{row[3]}" for row in pd.read_csv(fname_samples, comment="#").itertuples()]
 
 
 module wastewater_processing:
