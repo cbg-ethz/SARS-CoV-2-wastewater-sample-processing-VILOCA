@@ -28,6 +28,7 @@ use rule run_viloca from wastewater_processing as wastewater_processing_run_vilo
         fname_insert_bed=fname_insert_bed,
         fname_bad_samples= rules.check_coverage.output.fname_bad_cov_samples,
     output:
+        fname_vcf=f"results/{{sample}}/snvs.vcf",
         fname_csv=f"results/{{sample}}/variant_calling/snv/cooccurring_mutations.csv",
         dname_work=directory(
             f"results/{{sample}}/variant_calling/"
