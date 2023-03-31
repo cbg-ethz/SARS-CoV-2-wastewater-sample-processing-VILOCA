@@ -10,7 +10,7 @@ module wastewater_processing:
     snakefile:
         "../../../workflow/Snakefile"
     config:
-        load_config("config_distance/config.yaml")
+        load_config("config/config.yaml")
 
 use rule * from wastewater_processing as ww_*
 
