@@ -5,8 +5,8 @@ fname_reference = "../NC_045512.2.fasta"
 fname_insert_bed = "../SARS-CoV-2.insert.bed"
 
 # get samples of interest
-df_samples = pd.read_csv(fname_samples, comment="#")
-all_samples = [f"{row[1]}/{row[2]}" for row in df_samples.itertuples()]
+df_samples_here = pd.read_csv(fname_samples, comment="#")
+all_samples_here = [f"{row[1]}/{row[2]}" for row in df_samples_here.itertuples()]
 
 
 module wastewater_processing:
@@ -19,7 +19,7 @@ use rule * from wastewater_processing as wastewater_processing_*
 rule all:
     input:
         [ f"results/{sample}/variant_calling/snv/cooccurring_mutations.csv"
-            for sample in all_samples
+            for sample in all_samples_here
         ],
     default_target: True
 
