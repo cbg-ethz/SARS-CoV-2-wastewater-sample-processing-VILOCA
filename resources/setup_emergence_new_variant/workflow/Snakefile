@@ -6,7 +6,7 @@ fname_reference = "resources/NC_045512.2.fasta"
 fname_insert_bed = "resources/SARS-CoV-2.insert.bed"
 
 all_samples_here = [f"{row[2]}/{row[3]}" for row in pd.read_csv(fname_samples, comment="#").itertuples()]
-
+print(all_samples_here)
 
 module wastewater_processing:
     snakefile:
@@ -31,10 +31,10 @@ rule all:
 # other output
 use rule run_viloca from wastewater_processing as wastewater_processing_run_viloca with:
     input:
-        fname_bam=rules.ww_alignment_merged.output.fname_bam,
+        fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.subsampled.bam",
         fname_reference=fname_reference,
         fname_insert_bed=fname_insert_bed,
-        fname_bad_samples= rules.ww_check_coverage.output.fname_bad_cov_samples,
+        fname_bad_samples=f"results/samples.bad_coverage.csv",
     output:
         fname_vcf=f"results/{{sample}}/snvs.vcf",
         fname_csv=f"results/{{sample}}/variant_calling/snv/cooccurring_mutations.csv",
