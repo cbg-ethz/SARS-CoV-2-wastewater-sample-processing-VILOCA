@@ -129,8 +129,8 @@ rule alignment_merged:
 # https://lindenb.github.io/jvarkit/Biostar154220.html
 rule subsample_alignment:
     input:
-        fname_bam=rules.alignment_merged.output.fname_bam,
-        fname_coverage=rules.unzip_coverage_file.output.fname_coverage,
+        fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.bam",
+        fname_coverage=f"results/{{sample}}/alignment/coverage.tsv",
     output:
         fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.subsampled.bam",
     params:
@@ -144,11 +144,11 @@ rule subsample_alignment:
 
 rule run_viloca:
     input:
-        fname_bam=rules.subsample_alignment.output.fname_bam,
+        fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.subsampled.bam",
         #fname_bam=rules.alignment_merged.output.fname_bam,
         fname_reference=fname_reference,
         fname_insert_bed=fname_insert_bed,
-        fname_bad_samples= rules.check_coverage.output.fname_bad_cov_samples,
+        fname_bad_samples= f"results/samples.bad_coverage.csv",
     output:
         fname_vcf=f"results/{{sample}}/snvs.vcf",
         #fname_raw=f"results/{{sample}}/variant_calling/snv/raw_snv.tsv",
@@ -183,7 +183,7 @@ rule scan_raw_snv:
 
 rule annotate_vcf:
     input:
-        fname_snvs_vcf=rules.run_viloca.output.fname_vcf,
+        fname_snvs_vcf=f"results/{{sample}}/snvs.vcf",
         fname_genbank_file="resources/GCF_009858895.2_ASM985889v3_genomic.gbff",
     output:
         fname_snvs_vcf=f"results/{{sample}}/snvs.annotated.vcf",
@@ -194,7 +194,7 @@ rule annotate_vcf:
 
 rule mutations_of_interest:
     input:
-        fname_snvs_vcf=rules.annotate_vcf.output.fname_snvs_vcf,
+        fname_snvs_vcf=f"results/{{sample}}/snvs.annotated.vcf",
     params:
         fname_mutation_definitions=f"resources/mutation_definitions.yaml",
     output:
