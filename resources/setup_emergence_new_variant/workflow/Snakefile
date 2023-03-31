@@ -1,8 +1,8 @@
 import pandas as pd
 
-fname_samples = "/resources/samples.csv"
-fname_reference = "../NC_045512.2.fasta"
-fname_insert_bed = "../SARS-CoV-2.insert.bed"
+fname_samples = "resources/setup_emergence_new_variant/resources/samples.csv"
+fname_reference = "resources/NC_045512.2.fasta"
+fname_insert_bed = "resources/SARS-CoV-2.insert.bed"
 
 df_samples = pd.read_csv(fname_samples, comment="#")
 all_samples = [f"{row[1]}/{row[2]}" for row in df_samples.itertuples()]
