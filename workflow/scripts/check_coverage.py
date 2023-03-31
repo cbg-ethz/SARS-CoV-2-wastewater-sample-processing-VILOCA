@@ -3,7 +3,7 @@
 import pandas as pd
 
 
-def main(fnames_coverage, region_of_interest, samples, fname_good_samples, fname_bad_cov_samples):
+def main(fnames_coverage, samples, fname_good_samples, fname_bad_cov_samples):
 
     bad = []
     good = []
