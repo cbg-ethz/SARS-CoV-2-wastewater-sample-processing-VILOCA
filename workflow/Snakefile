@@ -75,7 +75,7 @@ rule split:
     conda:
         "envs/split.yaml"
     input:
-        fname_bam=rules.provide_alignment.output.fname_bam,
+        fname_bam=f"results/{{sample}}/alignment/REF_aln.bam",
     output:
         fname_fastq_R1=f"results/{{sample}}/alignment/reads.R1.fastq",
         fname_fastq_R2=f"results/{{sample}}/alignment/reads.R2.fastq",
@@ -86,8 +86,8 @@ rule split:
 
 rule flash:
     input:
-        fname_fastq_R1=rules.split.output.fname_fastq_R1,
-        fname_fastq_R2=rules.split.output.fname_fastq_R2,
+        fname_fastq_R1=f"results/{{sample}}/alignment/reads.R1.fastq",
+        fname_fastq_R2=f"results/{{sample}}/alignment/reads.R2.fastq",
     output:
         fname_fastq_merged=f"results/{{sample}}/alignment/flash/reads_merged.extendedFrags.fastq",
         dname_out=directory(
@@ -113,7 +113,7 @@ rule flash:
 rule alignment_merged:
     input:
         fname_reference=fname_reference,
-        fname_fastq_merged=rules.flash.output.fname_fastq_merged,
+        fname_fastq_merged=f"results/{{sample}}/alignment/flash/reads_merged.extendedFrags.fastq",
     output:
         fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.bam",
     conda:
