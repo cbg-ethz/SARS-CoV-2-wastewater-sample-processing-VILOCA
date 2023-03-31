@@ -5,7 +5,7 @@ fname_samples = dir_path+"resources/samples.csv"
 fname_reference = "resources/NC_045512.2.fasta"
 fname_insert_bed = "resources/SARS-CoV-2.insert.bed"
 
-df_samples = pd.read_csv(fname_samples, comment="#")
+df_samples_ = pd.read_csv(fname_samples, comment="#")
 all_samples = [f"{row[1]}/{row[2]}" for row in df_samples.itertuples()]
 
 
@@ -25,7 +25,7 @@ use rule alignment_merged from wastewater_processing as ww_alignment_merged
 rule all:
     input:
         [ f"results/{sample}/variant_calling/snv/cooccurring_mutations.csv"
-            for sample in wastewater_processing.all_samples
+            for sample in all_samples
         ],
     default_target: True
 
