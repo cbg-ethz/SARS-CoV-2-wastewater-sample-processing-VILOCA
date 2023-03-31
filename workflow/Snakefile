@@ -6,10 +6,13 @@ import pandas as pd
 from snakemake.utils import Paramspace
 from snakemake.io import Namedlist
 
-fname_reference = "resources/NC_045512.2.fasta"
-fname_insert_bed = "resources/SARS-CoV-2.insert.bed"
-fname_samples = "resources/samples.tsv"
-dir_path_samples = "/cluster/project/pangolin/work-vp-test/results/"
+# setup config
+configfile: "config/config.yaml"
+
+fname_reference = config["fname_reference"]
+fname_insert_bed = config["fname_insert_bed"]
+fname_samples = config["fname_samples"]
+dir_path_samples = config["dir_path_samples"]
 
 df_samples = pd.read_csv(fname_samples, comment="#")
 all_samples = [f"{row[1]}/{row[2]}" for row in df_samples.itertuples()]

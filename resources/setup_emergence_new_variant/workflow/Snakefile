@@ -1,30 +1,23 @@
 import pandas as pd
+from snakemake.io import load_configfile
 
-dir_path="/cluster/work/bewi/members/lfuhrmann/SARS-CoV-2-wastewater-sample-processing-VILOCA/resources/setup_emergence_new_variant/"
-fname_samples = dir_path+"resources/samples.csv"
-fname_reference = "resources/NC_045512.2.fasta"
-fname_insert_bed = "resources/SARS-CoV-2.insert.bed"
-
-all_samples_here = [f"{row[2]}/{row[3]}" for row in pd.read_csv(fname_samples, comment="#").itertuples()]
-print(all_samples_here)
+# setup workflow
+def load_config(path):
+    config = load_configfile(path)
+    return config
 
 module wastewater_processing:
     snakefile:
         "../../../workflow/Snakefile"
+    config:
+        load_config("config_distance/config.yaml")
 
-use rule copy_coverage_file from wastewater_processing as ww_copy_coverage_file
-use rule unzip_coverage_file from wastewater_processing as ww_unzip_coverage_file
-use rule check_coverage from wastewater_processing as ww_check_coverage
-use rule provide_alignment from wastewater_processing as ww_provide_alignment
-use rule split from wastewater_processing as ww_split
-use rule flash from wastewater_processing as ww_flash
-use rule alignment_merged from wastewater_processing as ww_alignment_merged
-
+use rule * from wastewater_processing as ww_*
 
 rule all:
     input:
         [ f"results/{sample}/variant_calling/snv/cooccurring_mutations.csv"
-            for sample in all_samples_here
+            for sample in wastewater_processing.all_samples
         ],
     default_target: True
 
