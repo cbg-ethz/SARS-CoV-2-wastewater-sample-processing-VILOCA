@@ -1,7 +1,7 @@
 import pandas as pd
 
 dir_path="/cluster/work/bewi/members/lfuhrmann/SARS-CoV-2-wastewater-sample-processing-VILOCA/resources/setup_emergence_new_variant/"
-fname_samples = dir_path+"resources/setup_emergence_new_variant/resources/samples.csv"
+fname_samples = dir_path+"resources/samples.csv"
 fname_reference = "resources/NC_045512.2.fasta"
 fname_insert_bed = "resources/SARS-CoV-2.insert.bed"
 
