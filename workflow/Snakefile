@@ -21,6 +21,7 @@ all_samples = [f"{row[2]}/{row[3]}" for row in df_samples.itertuples()]
 rule all:
     input:
         f"results/mutations_of_interest.csv",
+        f"results/all_mutations.csv",
         #f"results/mutations_of_interest.raw.csv",
 
 
