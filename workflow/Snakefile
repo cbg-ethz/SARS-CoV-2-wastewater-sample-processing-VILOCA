@@ -170,6 +170,8 @@ rule run_viloca:
         dname_work=directory(
             f"results/{{sample}}/variant_calling/"
         ),
+    benchmark:
+        f"results/{{sample}}/benchmark.tsv"
     params:
         sample= lambda wc: wc.get("sample")
     conda:
