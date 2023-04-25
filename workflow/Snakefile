@@ -146,6 +146,17 @@ rule subsample_alignment:
         "./scripts/subsample_aln.py"
 
 
+rule remove_original_aln:
+    input:
+        fname_bam_merged=f"results/{{sample}}/alignment/REF_aln.merged.bam",
+        fname_bam=f"results/{{sample}}/alignment/REF_aln.bam",
+        fname_bam_idx=f"results/{{sample}}/alignment/REF_aln.bam.bai",
+    shell:
+    """
+    rm {input.fname_bam}
+    rm {input.fname_bam_idx}
+    """
+
 rule run_viloca:
     input:
         fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.bam",
