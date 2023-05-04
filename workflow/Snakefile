@@ -152,10 +152,10 @@ rule remove_original_aln:
         fname_bam=f"results/{{sample}}/alignment/REF_aln.bam",
         fname_bam_idx=f"results/{{sample}}/alignment/REF_aln.bam.bai",
     shell:
-    """
-    rm {input.fname_bam}
-    rm {input.fname_bam_idx}
-    """
+        """
+        rm {input.fname_bam}
+        rm {input.fname_bam_idx}
+        """
 
 rule run_viloca:
     input:
