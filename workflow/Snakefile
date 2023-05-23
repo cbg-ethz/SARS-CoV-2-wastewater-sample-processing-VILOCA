@@ -22,8 +22,6 @@ rule all:
     input:
         f"results/mutations_of_interest.csv",
         f"results/all_mutations.csv",
-        #f"results/mutations_of_interest.raw.csv",
-
 
 rule copy_coverage_file:
     input:
@@ -180,23 +178,9 @@ rule run_viloca:
     resources:
         mem_mb=64000,
         runtime=5760,
-        #threads: 32,
     script:
         "scripts/run_viloca.py"
 
-"""
-rule scan_raw_snv:
-    input:
-        fname_snvs_vcf=rules.run_viloca.output.fname_raw,
-    params:
-        fname_mutation_definitions=f"resources/mutation_definitions.yaml",
-    output:
-        fname_mutations=f"results/{{sample}}/mutations_of_interest.raw.csv",
-    conda:
-        "envs/annotate_vcf.yaml"
-    script:
-        "./scripts/scan_mutations.py"
-"""
 
 rule annotate_vcf:
     input:
@@ -251,30 +235,3 @@ rule collect_all_annotated_mutations:
         "envs/annotate_vcf.yaml"
     script:
         "./scripts/collect_all_annotated_mutations.py"
-
-
-"""
-rule collect_mutations_of_interest_raw:
-    input:
-        csv_list=[
-            f"results/{sample}/mutations_of_interest.raw.csv"
-            for sample in all_samples
-        ],
-    output:
-        fname_result_csv=f"results/mutations_of_interest.raw.csv",
-    params:
-        params=all_samples,
-    conda:
-        "envs/viloca.yaml"
-    script:
-        "scripts/collect_mutations.py"
-
-"""
-
-"""
-rule heatmap_plot:
-    input:
-        fname_csv=f"results/mutations_of_interest.csv"
-    output:
-        fname_heatmap=f"results/summary_heatmap.pdf"
-"""
