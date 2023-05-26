@@ -22,6 +22,7 @@ rule all:
     input:
         f"results/mutations_of_interest.csv",
         f"results/all_mutations.csv",
+        f"results/all_mutations.annotated.csv", # note that here deletions are excluded
 
 rule copy_coverage_file:
     input:
@@ -164,7 +165,6 @@ rule run_viloca:
         fname_bad_samples= f"results/samples.bad_coverage.csv",
     output:
         fname_vcf=f"results/{{sample}}/snvs.vcf",
-        #fname_raw=f"results/{{sample}}/variant_calling/snv/raw_snv.tsv",
         dname_work=directory(
             f"results/{{sample}}/variant_calling/"
         ),
@@ -193,38 +193,40 @@ rule annotate_vcf:
     script:
         "./scripts/annotate_vcf.py"
 
+
+rule collect_all_annotated_mutations:
+    input:
+        vcf_list=[
+            f"results/{sample}/snvs.annotated.vcf"
+            for sample in all_samples
+        ],
+    output:
+        fname_result_csv=f"results/all_mutations.annotated.csv",
+    params:
+        params=all_samples,
+    conda:
+        "envs/annotate_vcf.yaml"
+    script:
+        "./scripts/collect_all_annotated_mutations.py"
+
 rule mutations_of_interest:
     input:
-        fname_snvs_vcf=f"results/{{sample}}/snvs.annotated.vcf",
+        fname_all_mutations=f"results/all_mutations.annotated.csv",
     params:
         fname_mutation_definitions=f"resources/mutation_definitions.yaml",
+        all_samples=all_samples,
     output:
-        fname_mutations=f"results/{{sample}}/mutations_of_interest.csv",
+        fname_mutations=f"results/mutations_of_interest.csv",
     conda:
         "envs/annotate_vcf.yaml"
     script:
         "./scripts/scan_mutations.py"
 
 
-rule collect_mutations_of_interest:
-    input:
-        csv_list=[
-            f"results/{sample}/mutations_of_interest.csv"
-            for sample in all_samples
-        ],
-    output:
-        fname_result_csv=f"results/mutations_of_interest.csv",
-    params:
-        params=all_samples,
-    conda:
-        "envs/viloca.yaml"
-    script:
-        "scripts/collect_mutations.py"
-
-rule collect_all_annotated_mutations:
+rule collect_all_mutations:
     input:
         vcf_list=[
-            f"results/{sample}/snvs.annotated.vcf"
+            f"results/{sample}/snvs.vcf"
             for sample in all_samples
         ],
     output:
