@@ -1,6 +1,6 @@
 """
 Input:
-    -- snvs.vcf outputted by VILOCA
+    -- csv files of all mutations
     -- yaml with mutation definitions
 
 Output:
@@ -8,7 +8,6 @@ Output:
 """
 import yaml
 import pandas as pd
-from fuc import pyvcf
 
 def parse_yaml(fname_yaml):
 
@@ -19,32 +18,30 @@ def parse_yaml(fname_yaml):
     return dict_mut
 
 
-
-
-
-def main(fname_vcf, fname_csv, fname_yaml):
+def main(fname_muts, fname_csv, fname_yaml, all_samples):
 
     # read mutations
     dict_mut = parse_yaml(fname_yaml)
     positions_of_interest = [int(x) for x in list(dict_mut.keys())]
 
-    if fname_vcf.split(".")[-1]=="vcf":
-        # vcf into dataframe
-        df_vcf = pyvcf.VcfFrame.from_file(fname_vcf).df
-        df_mut = df_vcf[df_vcf['POS'].isin(positions_of_interest)]
+    df_muts = pd.read_csv(fname_muts)
 
-    elif  fname_vcf.split(".")[-1]=="tsv":
-        df_vcf = pd.read_csv(fname_vcf, sep='\t')
-        if df_vcf.shape[0]>0:
-            df_mut = df_vcf[df_vcf['Pos'].isin(positions_of_interest)]
-        else:
-            df_mut = df_vcf
+    # filter for positions of interest
+    df_muts = df_muts[df_muts['POS'].isin(positions_of_interest)]
 
-    df_mut.to_csv(fname_csv)
+    # for samples that don't have positins of interest we need to add an empty lind
+    for sample_name in all_samples:
+        if sample_name not in df_muts['sample'].unique():
+            # create empty row
+            df_muts = df_muts.append({'sample':sample_name}, ignore_index=True)
+            #df_muts = pd.concat([df_muts, pd.DataFrame({"sample": sample_name})])
+
+    df_muts.to_csv(fname_csv)
 
 if __name__ == "__main__":
     main(
-        snakemake.input.fname_snvs_vcf,
+        snakemake.input.fname_all_mutations,
         snakemake.output.fname_mutations,
         snakemake.params.fname_mutation_definitions,
+        snakemake.params.all_samples,
     )
