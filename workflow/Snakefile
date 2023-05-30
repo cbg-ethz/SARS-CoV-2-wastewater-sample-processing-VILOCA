@@ -212,6 +212,7 @@ rule collect_all_annotated_mutations:
 rule mutations_of_interest:
     input:
         fname_all_mutations=f"results/all_mutations.annotated.csv",
+        fname_bad_samples=f"results/samples.bad_coverage.csv",
     params:
         fname_mutation_definitions=f"resources/mutation_definitions.yaml",
         all_samples=all_samples,

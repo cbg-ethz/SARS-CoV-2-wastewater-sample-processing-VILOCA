@@ -18,7 +18,11 @@ def parse_yaml(fname_yaml):
     return dict_mut
 
 
-def main(fname_muts, fname_csv, fname_yaml, all_samples):
+def main(fname_muts, fname_csv, fname_yaml, all_samples, fname_bad_samples):
+
+    # get bad samples --> those should not occurr in the results as they haven't
+    # been processed and we cannot say anything about them
+    bad_samples = pd.read_csv(fname_bad_samples)['sample'].values.tolist()
 
     # read mutations
     dict_mut = parse_yaml(fname_yaml)
@@ -31,10 +35,11 @@ def main(fname_muts, fname_csv, fname_yaml, all_samples):
 
     # for samples that don't have positins of interest we need to add an empty lind
     for sample_name in all_samples:
-        if sample_name not in df_muts['sample'].unique():
-            # create empty row
-            df_muts = df_muts.append({'sample':sample_name}, ignore_index=True)
-            #df_muts = pd.concat([df_muts, pd.DataFrame({"sample": sample_name})])
+        if sample_name not in bad_samples:
+            if sample_name not in df_muts['sample'].unique():
+                # create empty row
+                df_muts = df_muts.append({'sample':sample_name}, ignore_index=True)
+                #df_muts = pd.concat([df_muts, pd.DataFrame({"sample": sample_name})])
 
     df_muts.to_csv(fname_csv)
 
@@ -44,4 +49,5 @@ if __name__ == "__main__":
         snakemake.output.fname_mutations,
         snakemake.params.fname_mutation_definitions,
         snakemake.params.all_samples,
+        snakemake.input.fname_bad_samples,
     )
