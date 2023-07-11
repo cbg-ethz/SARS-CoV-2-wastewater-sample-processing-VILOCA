@@ -13,4 +13,4 @@ Output:
 
 To run this workflow adapt file paths in config and sample names. Run the pipeline on Euler with run_workflow.sh.
 
-Note, at the moment the workflow is SARS-CoV-2 specific, however, reference files and gene annotations can be easily swapped. 
+Note, at the moment the workflow is SARS-CoV-2 specific, however, reference files and gene annotations can be easily swapped.
