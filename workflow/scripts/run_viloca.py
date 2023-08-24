@@ -30,7 +30,7 @@ def main(fname_bam, fname_reference, fname_insert_bed, fname_results_snv, dname_
                 fname_bam.resolve(),
                 "-f",
                 fname_reference.resolve(),
-                "--sampler",
+                "--mode",
                 "use_quality_scores",
                 "--alpha",
                 str(alpha),
