@@ -161,11 +161,11 @@ rule subsample_alignment:
         fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.subsampled.bam",
     params:
         sample= lambda wc: wc.get("sample"),
-        coverage_threshold=20000
-        miniconda_path="miniconda_path"
+        coverage_threshold=20000,
+        miniconda_path="miniconda_path",
     shell:
         """
-        conda activate {params.miniconda_path}env_jdk
+        conda activate {params.miniconda_path}
         cd {input.jvarkit_dir}
 
         # there's a runnable in dist/
