@@ -165,11 +165,8 @@ rule subsample_alignment:
         miniconda_path="miniconda_path",
     shell:
         """
-        conda activate {params.miniconda_path}
-        cd {input.jvarkit_dir}
-
         # there's a runnable in dist/
-        java -jar results/jvarkit/dist/jvarkit.jar biostar145820 -n {params.coverage_threshold} --samoutputformat BAM --output {input.fname_bam} {input.fname_bam}
+        java -jar results/jvarkit/dist/jvarkit.jar biostar145820 -n {params.coverage_threshold} --samoutputformat BAM --output {output.fname_bam} {input.fname_bam}
         """
 
 
