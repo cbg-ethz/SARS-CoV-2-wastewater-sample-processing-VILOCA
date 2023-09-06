@@ -130,19 +130,44 @@ rule alignment_merged:
 
 # TODO: integrate this tool for capping at a given coverage
 # https://lindenb.github.io/jvarkit/Biostar154220.html
+
+rule create_env_jvarkit:
+    output:
+        dir=directory(f"results/jvarkit")
+    shell:
+        """
+        # install *exactly* open JDK 11 as Gradle is very finicky
+        conda create -n env_jdk -c conda-forge "openjdk=11"
+        conda activate env_jdk
+
+        cd results
+
+        # get the latest commit that actually works (master is broken, seemingly)
+        git clone -b master "https://github.com/lindenb/jvarkit.git"
+        cd jvarkit
+        git checkout 5218c135534921738e254c94c411126d15b9594c
+        ./gradlew jvarkit
+        """
+
+
 rule subsample_alignment:
     input:
+        jvarkit_dir=f"results/jvarkit",
         fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.bam",
-        fname_coverage=f"results/{{sample}}/alignment/coverage.tsv",
+        #fname_coverage=f"results/{{sample}}/alignment/coverage.tsv",
     output:
         fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.subsampled.bam",
     params:
         sample= lambda wc: wc.get("sample"),
-        coverage_threshold=200000
-    conda:
-        "envs/split.yaml"
-    script:
-        "./scripts/subsample_aln.py"
+        coverage_threshold=20000
+    shell:
+        """
+        conda activate env_jdk
+        cd {input.jvarkit_dir}
+
+        # there's a runnable in dist/
+        java -jar dist/jvarkit.jar biostar145820 -n {params.coverage_threshold} --samoutputformat BAM --output {input.fname_bam} {input.fname_bam}
+        """
 
 
 rule remove_original_aln:
