@@ -134,6 +134,8 @@ rule alignment_merged:
 rule create_env_jvarkit:
     output:
         dir=directory(f"results/jvarkit")
+    params:
+        miniconda_path="miniconda3/envs/snakemake/envs/"
     shell:
         """
         # install *exactly* open JDK 11 as Gradle is very finicky
@@ -160,13 +162,14 @@ rule subsample_alignment:
     params:
         sample= lambda wc: wc.get("sample"),
         coverage_threshold=20000
+        miniconda_path="miniconda_path"
     shell:
         """
-        conda activate env_jdk
+        conda activate {params.miniconda_path}env_jdk
         cd {input.jvarkit_dir}
 
         # there's a runnable in dist/
-        java -jar dist/jvarkit.jar biostar145820 -n {params.coverage_threshold} --samoutputformat BAM --output {input.fname_bam} {input.fname_bam}
+        java -jar results/jvarkit/dist/jvarkit.jar biostar145820 -n {params.coverage_threshold} --samoutputformat BAM --output {input.fname_bam} {input.fname_bam}
         """
 
 
