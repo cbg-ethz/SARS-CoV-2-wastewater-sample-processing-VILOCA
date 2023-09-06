@@ -140,7 +140,7 @@ rule create_env_jvarkit:
         """
         # install *exactly* open JDK 11 as Gradle is very finicky
         conda create -n env_jdk -c conda-forge "openjdk=11"
-        conda activate env_jdk
+        conda activate {params.miniconda_path}env_jdk
 
         cd results
 
