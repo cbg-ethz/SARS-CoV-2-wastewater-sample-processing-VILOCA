@@ -17,7 +17,7 @@ def unzip(fname):
 
 def main(dname_haplotypes, sample_name, fname_out_haplos):
 
-    for fname in glob.glob(f"{dname_haplotypes}*.reads-support.fas.gz":
+    for fname in glob.glob(f"{dname_haplotypes}*.reads-support.fas.gz"):
         unzip(fname)
 
     all_haplotype_files = [file for file in glob.glob(f"{dname_haplotypes}*.reads-support.fas")]
