@@ -167,6 +167,7 @@ rule subsample_alignment:
         """
         # there's a runnable in dist/
         java -jar results/jvarkit/dist/jvarkit.jar biostar145820 -n {params.coverage_threshold} --samoutputformat BAM --output {output.fname_bam} {input.fname_bam}
+        samtools sort -o {output.fname_bam} {output.fname_bam}
         """
 
 
