@@ -1,4 +1,4 @@
 fname_reference: resources/NC_045512.2.fasta
-fname_insert_bed: resources/SARS-CoV-2.insert.bed
+fname_insert_bed: resources/SARS-CoV-2.v532.insert.ba.2.filtered.bed
 fname_samples: config/samples.csv
 dir_path_samples: # add path to samples here
