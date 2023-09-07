@@ -22,7 +22,7 @@ rule all:
     input:
         f"results/mutations_of_interest.csv",
         f"results/all_mutations.csv",
-        f"results/all_haplotypes.fasta,
+        f"results/all_haplotypes.fasta",
         f"results/all_mutations.annotated.csv", # note that here deletions are excluded
 
 rule copy_coverage_file:
