@@ -128,9 +128,8 @@ rule alignment_merged:
         samtools sort -o {output.fname_bam} {output.fname_bam}
         """
 
-# TODO: integrate this tool for capping at a given coverage
-# https://lindenb.github.io/jvarkit/Biostar154220.html
-
+# TODO: create a bioconda package for this
+# this installation procedure doesn't work so well
 rule create_env_jvarkit:
     output:
         dir=directory(f"results/jvarkit")
