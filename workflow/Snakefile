@@ -22,6 +22,7 @@ rule all:
     input:
         f"results/mutations_of_interest.csv",
         f"results/all_mutations.csv",
+        f"results/all_haplotypes.fasta,
         f"results/all_mutations.annotated.csv", # note that here deletions are excluded
 
 rule copy_coverage_file:
@@ -150,7 +151,7 @@ rule create_env_jvarkit:
         ./gradlew jvarkit
         """
 
-
+# TODO: add here the correct conda enviroment
 rule subsample_alignment:
     input:
         jvarkit_dir=f"results/jvarkit",
@@ -192,6 +193,9 @@ rule run_viloca:
         dname_work=directory(
             f"results/{{sample}}/variant_calling/"
         ),
+        dname_haplotypes=directory(
+            f"results/{{sample}}/variant_calling/support/"
+        ),
     benchmark:
         f"results/{{sample}}/benchmark.tsv"
     params:
@@ -204,6 +208,33 @@ rule run_viloca:
         runtime=5760,
     script:
         "scripts/run_viloca.py"
+
+
+rule get_haplotypes:
+    input:
+        dname_haplotypes=directory(
+            f"results/{{sample}}/variant_calling/support/"
+        ),
+    output:
+        fname_haplotypes=f"results/{{sample}}/haplotypes.fasta",
+    params:
+        sample= lambda wc: wc.get("sample")
+    conda:
+        "envs/annotate_vcf.yaml"
+    script:
+        "scripts/haplotypes.py"
+
+rule collect_haplotypes:
+    input:
+        haplos=[
+            f"results/{sample}/haplotypes.fasta"
+            for sample in all_samples
+        ],
+    output:
+        fname=f"results/all_haplotypes.fasta",
+    script:
+        "scripts/combine_txt_files.py"
+
 
 
 rule annotate_vcf:
