@@ -129,44 +129,20 @@ rule alignment_merged:
         samtools sort -o {output.fname_bam} {output.fname_bam}
         """
 
-# TODO: create a bioconda package for this
-# this installation procedure doesn't work so well
-rule create_env_jvarkit:
-    output:
-        dir=directory(f"results/jvarkit")
-    params:
-        miniconda_path="miniconda3/envs/snakemake/envs/"
-    shell:
-        """
-        # install *exactly* open JDK 11 as Gradle is very finicky
-        conda create -n env_jdk -c conda-forge "openjdk=11"
-        conda activate {params.miniconda_path}env_jdk
-
-        cd results
-
-        # get the latest commit that actually works (master is broken, seemingly)
-        git clone -b master "https://github.com/lindenb/jvarkit.git"
-        cd jvarkit
-        git checkout 5218c135534921738e254c94c411126d15b9594c
-        ./gradlew jvarkit
-        """
-
-# TODO: add here the correct conda enviroment
 rule subsample_alignment:
     input:
         jvarkit_dir=f"results/jvarkit",
         fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.bam",
-        #fname_coverage=f"results/{{sample}}/alignment/coverage.tsv",
     output:
         fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.subsampled.bam",
     params:
         sample= lambda wc: wc.get("sample"),
         coverage_threshold=20000,
-        miniconda_path="miniconda_path",
+    conda:
+        "envs/subsampling.yaml"
     shell:
         """
-        # there's a runnable in dist/
-        java -jar results/jvarkit/dist/jvarkit.jar biostar145820 -n {params.coverage_threshold} --samoutputformat BAM --output {output.fname_bam} {input.fname_bam}
+        jvarkit biostar154220 -n {params.coverage_threshold} --samoutputformat BAM --output {output.fname_bam} {input.fname_bam}
         samtools sort -o {output.fname_bam} {output.fname_bam}
         """
 
