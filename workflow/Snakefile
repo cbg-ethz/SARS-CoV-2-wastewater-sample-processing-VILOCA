@@ -137,7 +137,7 @@ rule subsample_alignment:
         fname_bam_unsort_sub=temp(f"results/{{sample}}/alignment/REF_aln.merged.unsort.subsampled.bam"),
         fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.subsampled.bam",
     params:
-        coverage_threshold=20000,
+        coverage_threshold=100000,
     conda:
         "envs/subsampling.yaml"
     shell:

@@ -1,7 +1,6 @@
 channels:
-  - /home/something/whatever/LinuxArtifacts/packages/
   - conda-forge
   - bioconda
 dependencies:
-  - jvarkit
+  - jvarkit 
   - samtools=1.9
