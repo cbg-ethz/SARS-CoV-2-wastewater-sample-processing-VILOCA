@@ -25,7 +25,7 @@ rule all:
         f"results/all_haplotypes.fasta",
         f"results/all_mutations.annotated.csv", # note that here deletions are excluded
         [
-            f"results/{{sample}}/alignment/coverage.merged.subsampled.tsv"
+            f"results/{sample}/alignment/coverage.merged.subsampled.tsv"
             for sample in all_samples
         ],
 
