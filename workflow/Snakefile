@@ -24,6 +24,10 @@ rule all:
         f"results/all_mutations.csv",
         f"results/all_haplotypes.fasta",
         f"results/all_mutations.annotated.csv", # note that here deletions are excluded
+        [
+            f"results/{{sample}}/alignment/coverage.merged.subsampled.tsv"
+            for sample in all_samples
+        ],
 
 rule copy_coverage_file:
     input:
@@ -147,8 +151,20 @@ rule subsample_alignment:
         jvarkit biostar154220 -n {params.coverage_threshold} --samoutputformat BAM {output.fname_bam_unsort} > {output.fname_bam_unsort_sub}
 
         samtools sort -o {output.fname_bam}  {output.fname_bam_unsort_sub}
+        samtools index {output.fname_bam}
         """
 
+
+rule stats_coverage:
+    input:
+        fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.subsampled.bam",
+    output:
+        fname_cov=f"results/{{sample}}/alignment/coverage.merged.subsampled.tsv",
+        fname_b=f"results/{{sample}}/alignment/basecounts.merged.subsampled.tsv",
+    shell:
+        """
+        aln2basecnt -b {output.fname_b} -c {output.fname_cov} {input.fname_bam}
+        """
 
 rule remove_original_aln:
     input:
