@@ -161,6 +161,8 @@ rule stats_coverage:
     output:
         fname_cov=f"results/{{sample}}/alignment/coverage.merged.subsampled.tsv",
         fname_b=f"results/{{sample}}/alignment/basecounts.merged.subsampled.tsv",
+    conda:
+        "envs/smallgenomeutilities.yaml"
     shell:
         """
         aln2basecnt -b {output.fname_b} -c {output.fname_cov} {input.fname_bam}
