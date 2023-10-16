@@ -141,7 +141,7 @@ rule subsample_alignment:
         fname_bam_unsort_sub=temp(f"results/{{sample}}/alignment/REF_aln.merged.unsort.subsampled.bam"),
         fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.subsampled.bam",
     params:
-        coverage_threshold=20000,
+        coverage_threshold=10000, # note the acutally threshold is at 2*coverage_threshold with jvarkit biostar154220
     conda:
         "envs/subsampling.yaml"
     shell:
