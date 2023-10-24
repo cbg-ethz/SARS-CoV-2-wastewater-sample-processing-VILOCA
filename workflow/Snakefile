@@ -22,7 +22,12 @@ rule all:
     input:
         f"results/mutations_of_interest.csv",
         f"results/all_mutations.csv",
+        f"results/all_haplotypes.fasta",
         f"results/all_mutations.annotated.csv", # note that here deletions are excluded
+        [
+            f"results/{sample}/alignment/coverage.merged.subsampled.tsv"
+            for sample in all_samples
+        ],
 
 rule copy_coverage_file:
     input:
@@ -128,22 +133,40 @@ rule alignment_merged:
         samtools sort -o {output.fname_bam} {output.fname_bam}
         """
 
-# TODO: integrate this tool for capping at a given coverage
-# https://lindenb.github.io/jvarkit/Biostar154220.html
 rule subsample_alignment:
     input:
         fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.bam",
-        fname_coverage=f"results/{{sample}}/alignment/coverage.tsv",
     output:
+        fname_bam_unsort=temp(f"results/{{sample}}/alignment/REF_aln.merged.unsort.bam"),
+        fname_bam_unsort_sub=temp(f"results/{{sample}}/alignment/REF_aln.merged.unsort.subsampled.bam"),
         fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.subsampled.bam",
     params:
-        sample= lambda wc: wc.get("sample"),
-        coverage_threshold=200000
+        coverage_threshold=10000, # note the acutally threshold is at 2*coverage_threshold with jvarkit biostar154220
     conda:
-        "envs/split.yaml"
-    script:
-        "./scripts/subsample_aln.py"
+        "envs/subsampling.yaml"
+    shell:
+        """
+        jvarkit sortsamrefname --samoutputformat BAM {input.fname_bam} > {output.fname_bam_unsort}
 
+        jvarkit biostar154220 -n {params.coverage_threshold} --samoutputformat BAM {output.fname_bam_unsort} > {output.fname_bam_unsort_sub}
+
+        samtools sort -o {output.fname_bam}  {output.fname_bam_unsort_sub}
+        samtools index {output.fname_bam}
+        """
+
+
+rule stats_coverage:
+    input:
+        fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.subsampled.bam",
+    output:
+        fname_cov=f"results/{{sample}}/alignment/coverage.merged.subsampled.tsv",
+        fname_b=f"results/{{sample}}/alignment/basecounts.merged.subsampled.tsv",
+    conda:
+        "envs/smallgenomeutilities.yaml"
+    shell:
+        """
+        aln2basecnt -b {output.fname_b} -c {output.fname_cov} {input.fname_bam}
+        """
 
 rule remove_original_aln:
     input:
@@ -158,7 +181,7 @@ rule remove_original_aln:
 
 rule run_viloca:
     input:
-        fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.bam",
+        fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.subsampled.bam",
         #fname_bam=rules.alignment_merged.output.fname_bam,
         fname_reference=fname_reference,
         fname_insert_bed=fname_insert_bed,
@@ -168,18 +191,48 @@ rule run_viloca:
         dname_work=directory(
             f"results/{{sample}}/variant_calling/"
         ),
+        dname_haplotypes=directory(
+            f"results/{{sample}}/variant_calling/support/"
+        ),
     benchmark:
         f"results/{{sample}}/benchmark.tsv"
     params:
         sample= lambda wc: wc.get("sample")
     conda:
         "envs/viloca.yaml"
-    threads: 32,
+    threads: 15,
     resources:
-        mem_mb=64000,
-        runtime=5760,
+        mem_mb=10000,
+        runtime=4*24*60, # 4 days
     script:
         "scripts/run_viloca.py"
+
+
+rule get_haplotypes:
+    input:
+        dname_haplotypes=directory(
+            f"results/{{sample}}/variant_calling/support/"
+        ),
+    output:
+        fname_haplotypes=f"results/{{sample}}/haplotypes.fasta",
+    params:
+        sample= lambda wc: wc.get("sample")
+    conda:
+        "envs/annotate_vcf.yaml"
+    script:
+        "scripts/haplotypes.py"
+
+rule collect_haplotypes:
+    input:
+        haplos=[
+            f"results/{sample}/haplotypes.fasta"
+            for sample in all_samples
+        ],
+    output:
+        fname=f"results/all_haplotypes.fasta",
+    script:
+        "scripts/combine_txt_files.py"
+
 
 
 rule annotate_vcf:

@@ -5,7 +5,7 @@ from os.path import isfile, join
 import pandas as pd
 
 
-def main(fname_bam, fname_reference, fname_insert_bed, fname_results_snv, dname_work, fname_bad_samples, sample):
+def main(fname_bam, fname_reference, fname_insert_bed, fname_results_snv, dname_work, fname_bad_samples, sample, threads):
 
     bad_samples = pd.read_csv(fname_bad_samples)['sample'].values.tolist()
 
@@ -46,6 +46,8 @@ def main(fname_bam, fname_reference, fname_insert_bed, fname_results_snv, dname_
                 #"NC_045512.2:10099-23327",
                 "--min_windows_coverage",
                 "1",
+                "--threads",
+                str(threads)
             ],
             cwd=dname_work,
         )
@@ -62,4 +64,5 @@ if __name__ == "__main__":
         Path(snakemake.output.dname_work),
         snakemake.input.fname_bad_samples,
         snakemake.params.sample,
+        snakemake.threads
     )
