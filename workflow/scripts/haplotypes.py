@@ -27,7 +27,7 @@ def main(dname_haplotypes, sample_name, fname_out_haplos):
         my_seqs = []
 
         # iterate over all haplotype files
-        for fname_haplotype_region in fnames_haplotypes:
+        for fname_haplotype_region in all_haplotype_files:
             region = fname_haplotype_region.split(".reads-support.fas")[0].split("w-")[1]
             for record in SeqIO.parse(fname_haplotype_region, 'fasta'):
                     new_id = sample_name+'-'+region + '-' +str(record.id)
