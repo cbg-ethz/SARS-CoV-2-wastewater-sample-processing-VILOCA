@@ -44,6 +44,7 @@ rule collect_cooccurring_mutations:
     input:
         fnames_csv=[ f"results/{sample}/variant_calling/snv/cooccurring_mutations.csv"
             for sample in wastewater_processing.all_samples
+            if os.path.isfile(f"results/{sample}/variant_calling/snv/cooccurring_mutations.csv")
         ],
     output:
         fnames_csv=f"results/all_cooccurring_mutations.csv",
