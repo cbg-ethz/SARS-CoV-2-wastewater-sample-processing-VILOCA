@@ -16,9 +16,7 @@ use rule * from wastewater_processing as ww_*
 
 rule all:
     input:
-        [ f"results/{sample}/variant_calling/snv/cooccurring_mutations.csv"
-            for sample in wastewater_processing.all_samples
-        ],
+        f"results/all_cooccurring_mutations.csv",
     default_target: True
 
 # other output
@@ -40,3 +38,16 @@ use rule run_viloca from wastewater_processing as wastewater_processing_run_vilo
         mem_mb=100000,
         runtime=5760,
         threads=20,
+
+
+rule collect_cooccurring_mutations:
+    input:
+        fnames_csv=[ f"results/{sample}/variant_calling/snv/cooccurring_mutations.csv"
+            for sample in wastewater_processing.all_samples
+        ],
+    output:
+        fnames_csv=f"results/all_cooccurring_mutations.csv",
+    conda:
+        "envs/collect_mutations.yaml"
+    script:
+        "./scripts/coverage_diagnostics.py"
