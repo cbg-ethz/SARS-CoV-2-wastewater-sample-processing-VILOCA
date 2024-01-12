@@ -47,8 +47,8 @@ rule collect_cooccurring_mutations:
             if os.path.isfile(f"results/{sample}/variant_calling/snv/cooccurring_mutations.csv")
         ],
     output:
-        fnames_csv=f"results/all_cooccurring_mutations.csv",
+        fname_csv=f"results/all_cooccurring_mutations.csv",
     conda:
         "envs/collect_mutations.yaml"
     script:
-        "./scripts/coverage_diagnostics.py"
+        "./scripts/collect_mutations.py"

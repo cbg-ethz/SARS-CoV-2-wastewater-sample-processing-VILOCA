@@ -23,5 +23,5 @@ def main(fnames_csv, fname_cooccurring_mutations_csv):
 if __name__ == "__main__":
     main(
         snakemake.input.fnames_csv,
-        snakemake.output.fnames_csv,
+        snakemake.output.fname_csv,
     )
