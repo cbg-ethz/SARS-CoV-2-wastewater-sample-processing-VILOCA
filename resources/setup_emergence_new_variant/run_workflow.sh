@@ -8,6 +8,7 @@ snakemake \
   --profile profile_simple/ \
   --rerun-incomplete \
   --keep-incomplete \
+  --rerun-triggers mtime \
   -pr \
   --cores 200 \
   --use-conda \
