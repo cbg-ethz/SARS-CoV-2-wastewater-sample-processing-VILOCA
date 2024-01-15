@@ -1,4 +1,4 @@
 fname_reference: ../NC_045512.2.fasta
 fname_insert_bed: resources/SARS-CoV-2.insert.reduced.bed
-fname_samples: config/samples.csv
+fname_samples: config/samples.test.csv
 dir_path_samples: /cluster/project/pangolin/work-vp-test/results/
