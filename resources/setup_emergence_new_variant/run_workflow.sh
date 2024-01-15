@@ -7,6 +7,7 @@ sbatch \
 snakemake \
   --profile profile_simple/ \
   --rerun-incomplete \
+  --keep-incomplete \
   -pr \
   --cores 200 \
   --use-conda \
