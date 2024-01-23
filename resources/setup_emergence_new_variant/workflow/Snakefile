@@ -36,7 +36,7 @@ use rule run_viloca from wastewater_processing as wastewater_processing_run_vilo
         sample= lambda wc: wc.get("sample")
     resources:
         mem_mb=100000,
-        runtime=5760,
+        runtime=7200,
         threads=20,
 
 
