@@ -22,7 +22,7 @@ rule all:
 # other output
 use rule run_viloca from wastewater_processing as wastewater_processing_run_viloca with:
     input:
-        fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.bam",
+        fname_bam=f"results/{{sample}}/alignment/REF_aln.bam",
         fname_reference=wastewater_processing.config["fname_reference"],
         fname_insert_bed=wastewater_processing.config["fname_insert_bed"],
         fname_bad_samples=f"results/samples.bad_coverage.csv",
