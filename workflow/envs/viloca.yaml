@@ -9,4 +9,4 @@ dependencies:
  - pandas
  - pip
  - pip:
-   - git+https://github.com/cbg-ethz/VILOCA@b2w-multi-threads
+   - git+https://github.com/cbg-ethz/VILOCA@check_exitcode_multipro

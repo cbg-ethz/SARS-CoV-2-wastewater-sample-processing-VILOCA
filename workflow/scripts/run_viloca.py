@@ -24,8 +24,8 @@ def main(fname_bam, fname_reference, fname_insert_bed, fname_results_snv, dname_
 
         subprocess.run(
             [
-                "shorah",
-                "shotgun",
+                "viloca",
+                "run",
                 "-b",
                 fname_bam.resolve(),
                 "-f",
