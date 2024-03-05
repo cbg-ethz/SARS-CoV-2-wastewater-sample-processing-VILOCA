@@ -1,0 +1,76 @@
+import pandas as pd
+from snakemake.io import load_configfile
+
+# setup workflow
+def load_config(path):
+    config = load_configfile(path)
+    return config
+
+rule all:
+    input:
+        f"results/read_counts.csv",
+    default_target: True
+
+
+module wastewater_processing:
+    snakefile:
+        "../../../workflow/Snakefile"
+    config:
+        load_config("config/config.yaml")
+
+use rule * from wastewater_processing as ww_*
+
+rule fusion:
+    conda:
+        "envs/fuse.yaml"
+    input:
+        fname_bam=f"results/{{sample}}/alignment/REF_aln.bam",
+        fname_reference=wastewater_processing.config["fname_reference"],
+        fname_reference_idx=wastewater_processing.config["fname_reference"]+".fai",
+    output:
+        fname_sam=f"results/{{sample}}/alignment/REF_aln.sam",
+        fname_sam_sort=f"results/{{sample}}/alignment/REF_aln.sort.sam",
+        fname_bam_fused=f"results/{{sample}}/alignment/REF_aln.fused.bam",
+        fname_bam_nonfused=f"results/{{sample}}/alignment/REF_aln.nonfused.bam",
+    shell:
+        """
+        ## Preparation
+        samtools view -h -T {input.fname_reference} -t {input.fname_reference_idx} {input.fname_bam} > {output.fname_sam}
+
+        ## sort accrording to QNAME
+        samtools sort -O sam -n {output.fname_sam} > {output.fname_sam_sort}
+
+        ## run script
+        python scripts/fuse.py {output.fname_sam_sort}
+
+        ## create BAMs
+        samtools view -O bam fused_output.sam > fused_output.bam
+        samtools sort fused_output.bam > {output.fname_bam_fused}
+        samtools index {output.fname_bam_fused}
+
+        samtools view -O bam nonfused_output.sam > nonfused_output.bam
+        samtools sort nonfused_output.bam > {output.fname_bam_nonfused}
+        samtools index {output.fname_bam_nonfused}
+        """
+
+
+rule count_mapped_reads:
+    input:
+        fnames_bam=[
+        f"results/{sample}/alignment/REF_aln.bam"
+            for sample in wastewater_processing.all_samples
+        ],
+        fnames_bam_fused=[
+        f"results/{sample}/alignment/REF_aln.fused.bam"
+            for sample in wastewater_processing.all_samples
+        ],
+        fnames_bam_nonfused=[
+        f"results/{sample}/alignment/REF_aln.nonfused.bam"
+            for sample in wastewater_processing.all_samples
+        ],
+    output:
+        fname_csv=f"results/read_counts.csv",
+    conda:
+        "envs/fuse.yaml"
+    script:
+        "./scripts/count_reads.py"
