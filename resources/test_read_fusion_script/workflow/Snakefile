@@ -20,9 +20,9 @@ module wastewater_processing:
 
 use rule * from wastewater_processing as ww_*
 
-rule fusion:
+rule fusion_prep:
     conda:
-        "envs/fuse.yaml"
+        "../../workflow/envs/split.yaml"
     input:
         fname_bam=f"results/{{sample}}/alignment/REF_aln.bam",
         fname_reference=wastewater_processing.config["fname_reference"],
@@ -30,27 +30,26 @@ rule fusion:
     output:
         fname_sam=f"results/{{sample}}/alignment/REF_aln.sam",
         fname_sam_sort=f"results/{{sample}}/alignment/REF_aln.sort.sam",
-        fname_bam_fused=f"results/{{sample}}/alignment/REF_aln.fused.bam",
-        fname_bam_nonfused=f"results/{{sample}}/alignment/REF_aln.nonfused.bam",
     shell:
         """
         ## Preparation
         samtools view -h -T {input.fname_reference} -t {input.fname_reference_idx} {input.fname_bam} > {output.fname_sam}
-
         ## sort accrording to QNAME
         samtools sort -O sam -n {output.fname_sam} > {output.fname_sam_sort}
+        """
 
+rule fusion:
+    conda:
+        "envs/fuse.yaml"
+    input:
+        fname_sam_sort=f"results/{{sample}}/alignment/REF_aln.sort.sam",
+    output:
+        fname_sam_fused=f"results/{{sample}}/alignment/REF_aln.fused.sam",
+        fname_sam_nonfused=f"results/{{sample}}/alignment/REF_aln.nonfused.sam",
+    shell:
+        """
         ## run script
-        python scripts/fuse.py {output.fname_sam_sort}
-
-        ## create BAMs
-        samtools view -O bam fused_output.sam > fused_output.bam
-        samtools sort fused_output.bam > {output.fname_bam_fused}
-        samtools index {output.fname_bam_fused}
-
-        samtools view -O bam nonfused_output.sam > nonfused_output.bam
-        samtools sort nonfused_output.bam > {output.fname_bam_nonfused}
-        samtools index {output.fname_bam_nonfused}
+        python scripts/fuse.py {input.fname_sam_sort} {output.fname_sam_fused} {output.fname_sam_nonfused}
         """
 
 

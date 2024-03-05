@@ -3,7 +3,6 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - samtools
   - python>=3.9.0
   - pysam
   - pandas=1.3.4

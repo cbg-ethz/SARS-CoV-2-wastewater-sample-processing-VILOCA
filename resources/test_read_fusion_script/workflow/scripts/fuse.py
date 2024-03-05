@@ -266,11 +266,13 @@ def read_fusion(r1, r2, refseq, header):
 
 def fuse_reads(argv):
     fname = argv[1]
+    fname_sam_fused = argv[2]
+    fname_sam_nonfused =  argv[3]
     #fname = argv
     print("start processing "+fname)
     samfile = pysam.AlignmentFile(fname, "r")
-    sam_out = pysam.Samfile("fused_output.sam", "w", header=samfile.header)
-    sam_out_nonfused = pysam.Samfile("nonfused_output.sam", "w", header=samfile.header)
+    sam_out = pysam.Samfile(fname_sam_fused, "w", header=samfile.header)
+    sam_out_nonfused = pysam.Samfile(fname_sam_nonfused, "w", header=samfile.header)
 
     prev = None
     i = 0
