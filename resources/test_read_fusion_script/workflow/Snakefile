@@ -60,11 +60,11 @@ rule count_mapped_reads:
             for sample in wastewater_processing.all_samples
         ],
         fnames_bam_fused=[
-        f"results/{sample}/alignment/REF_aln.fused.bam"
+        f"results/{sample}/alignment/REF_aln.fused.sam"
             for sample in wastewater_processing.all_samples
         ],
         fnames_bam_nonfused=[
-        f"results/{sample}/alignment/REF_aln.nonfused.bam"
+        f"results/{sample}/alignment/REF_aln.nonfused.sam"
             for sample in wastewater_processing.all_samples
         ],
     output:
