@@ -268,6 +268,7 @@ def fuse_reads(argv):
     fname = argv[1]
     fname_sam_fused = argv[2]
     fname_sam_nonfused =  argv[3]
+    fname_ref = argv[4]
     #fname = argv
     print("start processing "+fname)
     samfile = pysam.AlignmentFile(fname, "r")
@@ -276,7 +277,7 @@ def fuse_reads(argv):
 
     prev = None
     i = 0
-    reference = next(SeqIO.parse("reference.fasta", "fasta"))
+    reference = next(SeqIO.parse(fname_ref, "fasta"))
     for read in samfile.fetch():
         if prev is not None:
             if prev.qname == read.qname:

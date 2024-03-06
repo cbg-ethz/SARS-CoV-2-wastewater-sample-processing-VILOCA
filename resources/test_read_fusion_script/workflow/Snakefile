@@ -43,13 +43,14 @@ rule fusion:
         "envs/fuse.yaml"
     input:
         fname_sam_sort=f"results/{{sample}}/alignment/REF_aln.sort.sam",
+        fname_ref=wastewater_processing.config["fname_reference"],
     output:
         fname_sam_fused=f"results/{{sample}}/alignment/REF_aln.fused.sam",
         fname_sam_nonfused=f"results/{{sample}}/alignment/REF_aln.nonfused.sam",
     shell:
         """
         ## run script
-        python workflow/scripts/fuse.py {input.fname_sam_sort} {output.fname_sam_fused} {output.fname_sam_nonfused}
+        python workflow/scripts/fuse.py {input.fname_sam_sort} {output.fname_sam_fused} {output.fname_sam_nonfused} {input.fname_ref}
         """
 
 
