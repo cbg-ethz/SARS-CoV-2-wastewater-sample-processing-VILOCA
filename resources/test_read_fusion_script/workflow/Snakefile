@@ -35,7 +35,7 @@ rule fusion_prep:
         ## Preparation
         samtools view -h -T {input.fname_reference} -t {input.fname_reference_idx} {input.fname_bam} > {output.fname_sam}
         ## sort accrording to QNAME
-        samtools sort -O sam -n {output.fname_sam} > {output.fname_sam_sort}
+        samtools sort -T tmp -O sam -n {output.fname_sam} > {output.fname_sam_sort}
         """
 
 rule fusion:
