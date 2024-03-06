@@ -21,8 +21,8 @@ module wastewater_processing:
 use rule * from wastewater_processing as ww_*
 
 rule fusion_prep:
-    conda:
-        "../../../workflow/envs/split.yaml"
+    #conda:
+    #    "../../../workflow/envs/split.yaml"
     input:
         fname_bam=f"results/{{sample}}/alignment/REF_aln.bam",
         fname_reference=wastewater_processing.config["fname_reference"],
