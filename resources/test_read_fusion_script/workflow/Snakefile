@@ -49,7 +49,7 @@ rule fusion:
     shell:
         """
         ## run script
-        python scripts/fuse.py {input.fname_sam_sort} {output.fname_sam_fused} {output.fname_sam_nonfused}
+        python workflow/scripts/fuse.py {input.fname_sam_sort} {output.fname_sam_fused} {output.fname_sam_nonfused}
         """
 
 
