@@ -17,6 +17,7 @@ use rule * from wastewater_processing as ww_*
 rule all:
     input:
         f"results/all_cooccurring_mutations.csv",
+        f"results/samples.all_coverage.csv",
     default_target: True
 
 # other output
