@@ -66,6 +66,6 @@ rule collect_coverage:
     params:
         samples=wastewater_processing.all_samples,
     conda:
-        "../../workflow/envs/annotate_vcf.yaml"
+        "../../../workflow/envs/annotate_vcf.yaml"
     script:
         "./scripts/collect_coverage.py"
