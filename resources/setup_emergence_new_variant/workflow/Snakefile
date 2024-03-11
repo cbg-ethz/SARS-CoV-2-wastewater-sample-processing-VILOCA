@@ -52,3 +52,19 @@ rule collect_cooccurring_mutations:
         "envs/collect_mutations.yaml"
     script:
         "./scripts/collect_mutations.py"
+
+
+rule collect_coverage:
+    input:
+        fnames_coverage=[
+            f"results/{sample}/alignment/coverage.tsv"
+            for sample in wastewater_processing.all_samples
+        ],
+    output:
+        fname_all_coverage=f"results/samples.all_coverage.csv",
+    params:
+        samples=wastewater_processing.all_samples,
+    conda:
+        "../../envs/annotate_vcf.yaml"
+    script:
+        "./scripts/collect_coverage.py"
