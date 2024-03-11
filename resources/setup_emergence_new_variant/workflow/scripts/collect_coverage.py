@@ -11,7 +11,7 @@ def main(fnames_coverage, samples, fname_all_coverage):
         df = pd.read_csv(file, sep='\t')
         df['coverage'] = df[sample]
 
-        tmp.appned(df[['pos', 'coverage']])
+        tmp.append(df[['pos', 'coverage']])
 
     pd.concat(tmp).to_csv(fname_all_coverage)
 
