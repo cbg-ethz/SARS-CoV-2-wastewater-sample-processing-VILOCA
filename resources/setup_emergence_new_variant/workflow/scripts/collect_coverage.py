@@ -10,8 +10,9 @@ def main(fnames_coverage, samples, fname_all_coverage):
     for file, sample in zip(fnames_coverage, samples):
         df = pd.read_csv(file, sep='\t')
         df['coverage'] = df[sample]
+        df['sample'] = sample
 
-        tmp.append(df[['pos', 'coverage']])
+        tmp.append(df[['pos', 'coverage', 'sample']])
 
     pd.concat(tmp).to_csv(fname_all_coverage)
 
