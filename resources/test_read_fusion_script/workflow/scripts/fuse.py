@@ -237,22 +237,29 @@ def read_fusion(r1, r2, refseq, header):
     # gap start and end
     gs = r1.pos + r1.query_alignment_length  # problem with soft clipping
     ge = r2.pos - 1
+    print("R1: " + r1.qname)
     print("gap start and end: " + str(gs) + " " + str(ge))
-    if (ge - gs) <= 0:  # when no gap, but an overlap
-        zz = get_overlap(r1, r2)
-        outr.cigarstring = cigar_from_list(zz)
-        outr.seq  = seq_from_list(zz)
-        outr.qual  = qual_from_list(zz)
-        restlen = r2.query_alignment_length - gs + ge
-        print(len(outr.seq), len(r1.seq), len(r2.seq[(len(r2.seq) - restlen - 1):]), len(outr.seq))
-    # in case of a gap
+
+    if (ge - gs) == -1:  # no gap in fact, ends meet
+        outr.cigarstring = r1.cigarstring + r2.cigarstring  # can we do this way?
+        outr.seq = r1.seq + r2.seq
+        outr.qual = r1.qual + r2.qual
     else:
-        outr.cigarstring = str(outr.template_length) + "M"  #obvious cheating
-        padder = str(refseq[gs:(ge+1)].seq)
-        outr.seq = r1.seq + padder + r2.seq
-        #print(len(outr.seq), len(r1.seq), len(padder), len(r2.seq), r1.template_length, r2.template_length)
-        padder = "F" * (ge - gs + 1)
-        outr.qual = r1.qual + padder + r2.qual
+        #if (ge - gs) <= 0:  # when no gap, but an overlap
+        if (ge - gs) < -1:  # when no gap, but an overlap
+            zz = get_overlap(r1, r2)
+            outr.cigarstring = cigar_from_list(zz)
+            outr.seq = seq_from_list(zz)
+            outr.qual = qual_from_list(zz)
+            restlen = r2.query_alignment_length - gs + ge
+            print(len(outr.seq), len(r1.seq), len(r2.seq[(len(r2.seq) - restlen - 1):]), len(outr.seq))
+        else: # proper gap
+            outr.cigarstring = str(outr.template_length) + "M"  #obvious cheating  ## FIX IT !!!
+            padder = str(refseq[gs:(ge+1)].seq)
+            outr.seq = r1.seq + padder + r2.seq
+            #print(len(outr.seq), len(r1.seq), len(padder), len(r2.seq), r1.template_length, r2.template_length)
+            padder = "F" * (ge - gs + 1)
+            outr.qual = r1.qual + padder + r2.qual
     outr.mapping_quality = min(r1.mapping_quality, r2.mapping_quality)
     outr.next_reference_name = "*"
     outr.next_reference_start = 0
@@ -260,8 +267,6 @@ def read_fusion(r1, r2, refseq, header):
     print(r1.qname + "  " + r2.qname)
     #print(outr.seq)
     return outr
-
-
 
 
 def fuse_reads(argv):
@@ -273,7 +278,7 @@ def fuse_reads(argv):
     print("start processing "+fname)
     samfile = pysam.AlignmentFile(fname, "r")
     sam_out = pysam.Samfile(fname_sam_fused, "w", header=samfile.header)
-    sam_out_nonfused = pysam.Samfile(fname_sam_nonfused, "w", header=samfile.header)
+    #sam_out_nonfused = pysam.Samfile(fname_sam_nonfused, "w", header=samfile.header)
 
     prev = None
     i = 0
@@ -290,8 +295,8 @@ def fuse_reads(argv):
                     if (cl != ql):
                         print ("CIGAR length and query length not matching")
                     sam_out.write(fused)
-                    sam_out_nonfused.write(prev)
-                    sam_out_nonfused.write(read)
+                    #sam_out_nonfused.write(prev)
+                    #sam_out_nonfused.write(read)
         prev = read
     print("Finished frusion "+str(i)+" pairs fused")
 
