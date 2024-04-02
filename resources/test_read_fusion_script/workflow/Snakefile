@@ -47,6 +47,8 @@ rule fusion:
     output:
         fname_sam_fused=f"results/{{sample}}/alignment/REF_aln.fused.sam",
         fname_sam_nonfused=f"results/{{sample}}/alignment/REF_aln.nonfused.sam",
+    resources:
+        runtime=4*60, # 4 hours
     shell:
         """
         ## run script
