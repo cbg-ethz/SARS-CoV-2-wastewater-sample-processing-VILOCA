@@ -235,7 +235,9 @@ def read_fusion(r1, r2, refseq, header):
         r2 = tmp
     outr.pos = r1.pos
     # gap start and end
+    # gs - the base after the R1 alignment
     gs = r1.pos + r1.query_alignment_length  # problem with soft clipping
+    # ge - the base before the R2
     ge = r2.pos - 1
     print("R1: " + r1.qname)
     print("gap start and end: " + str(gs) + " " + str(ge))
@@ -254,10 +256,10 @@ def read_fusion(r1, r2, refseq, header):
             restlen = r2.query_alignment_length - gs + ge
             print(len(outr.seq), len(r1.seq), len(r2.seq[(len(r2.seq) - restlen - 1):]), len(outr.seq))
         else: # proper gap
-            outr.cigarstring = str(outr.template_length) + "M"  #obvious cheating  ## FIX IT !!!
+            #outr.cigarstring = str(outr.template_length) + "M"  #obvious cheating  ## FIX IT !!!
+            outr.cigarstring = r1.cigarstring + str(ge - gs + 1) + "M" + r2.cigarstring
             padder = str(refseq[gs:(ge+1)].seq)
             outr.seq = r1.seq + padder + r2.seq
-            #print(len(outr.seq), len(r1.seq), len(padder), len(r2.seq), r1.template_length, r2.template_length)
             padder = "F" * (ge - gs + 1)
             outr.qual = r1.qual + padder + r2.qual
     outr.mapping_quality = min(r1.mapping_quality, r2.mapping_quality)
@@ -267,6 +269,8 @@ def read_fusion(r1, r2, refseq, header):
     print(r1.qname + "  " + r2.qname)
     #print(outr.seq)
     return outr
+
+
 
 
 def fuse_reads(argv):
@@ -302,6 +306,8 @@ def fuse_reads(argv):
 
 #### go:
 #fuse_reads("Lara_mini.sam")
+
+#fuse_reads("./alignment/REF_aln.sort.sam")
 
 
 # scriptization
