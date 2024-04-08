@@ -24,8 +24,8 @@ def main(fname_bam, fname_reference, fname_insert_bed, fname_results_snv, dname_
 
         subprocess.run(
             [
-                "shorah",
-                "shotgun",
+                "viloca",
+                "run",
                 "-b",
                 fname_bam.resolve(),
                 "-f",
@@ -38,6 +38,8 @@ def main(fname_bam, fname_reference, fname_insert_bed, fname_results_snv, dname_
                 str(n_max_haplotypes),
                 "--n_mfa_starts",
                 str(n_mfa_starts),
+                #'--exclude_non_var_pos_threshold',
+                #str(0.001),
                 "-z",
                 fname_insert_bed.resolve(), # amplicon mode doesn't work because we couldn't merge reverse and forward reads
                 #"-w",

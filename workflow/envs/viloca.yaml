@@ -9,4 +9,4 @@ dependencies:
  - pandas
  - pip
  - pip:
-   - git+https://github.com/LaraFuhrmann/shorah@master
+   - git+https://github.com/cbg-ethz/VILOCA@check_exitcode_multipro
