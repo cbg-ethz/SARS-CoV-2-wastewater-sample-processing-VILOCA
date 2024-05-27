@@ -128,6 +128,16 @@ def get_From_Pos(ll, st):
     out = ll[i:len(ll)]
     return (out)
 
+# get inserts
+def get_num_inserts(ll):
+    out = 0
+    i = 0
+    while i < len(ll):
+        if (ll[i][1] is None):
+            out = out + 1
+        i = i + 1
+    return (out)
+
 ####################################################################################
 # utlity: query length from CIGAR
 ####################################################################################
@@ -236,7 +246,12 @@ def read_fusion(r1, r2, refseq, header):
     outr.pos = r1.pos
     # gap start and end
     # gs - the base after the R1 alignment
-    gs = r1.pos + r1.query_alignment_length  # problem with soft clipping
+    #gs = r1.pos + r1.query_alignment_length  # problem with soft clipping
+    ## FIX
+    ll1 = get_aligned_pairs_extended(r1)
+    num_inserts = get_num_inserts(ll1)
+    gs = r1.pos + r1.query_alignment_length - num_inserts
+
     # ge - the base before the R2
     ge = r2.pos - 1
     print("R1: " + r1.qname)
@@ -269,8 +284,6 @@ def read_fusion(r1, r2, refseq, header):
     print(r1.qname + "  " + r2.qname)
     #print(outr.seq)
     return outr
-
-
 
 
 def fuse_reads(argv):
