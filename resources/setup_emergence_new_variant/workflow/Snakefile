@@ -16,15 +16,14 @@ use rule * from wastewater_processing as ww_*
 
 rule all:
     input:
-        [ f"results/{sample}/variant_calling/snv/cooccurring_mutations.csv"
-            for sample in wastewater_processing.all_samples
-        ],
+        f"results/all_cooccurring_mutations.csv",
+        f"results/samples.all_coverage.csv",
     default_target: True
 
 # other output
 use rule run_viloca from wastewater_processing as wastewater_processing_run_viloca with:
     input:
-        fname_bam=f"results/{{sample}}/alignment/REF_aln.merged.bam",
+        fname_bam=f"results/{{sample}}/alignment/REF_aln.bam",
         fname_reference=wastewater_processing.config["fname_reference"],
         fname_insert_bed=wastewater_processing.config["fname_insert_bed"],
         fname_bad_samples=f"results/samples.bad_coverage.csv",
@@ -38,5 +37,35 @@ use rule run_viloca from wastewater_processing as wastewater_processing_run_vilo
         sample= lambda wc: wc.get("sample")
     resources:
         mem_mb=100000,
-        runtime=5760,
+        runtime=7200,
         threads=20,
+
+
+rule collect_cooccurring_mutations:
+    input:
+        fnames_csv=[ f"results/{sample}/variant_calling/snv/cooccurring_mutations.csv"
+            for sample in wastewater_processing.all_samples
+            if os.path.isfile(f"results/{sample}/variant_calling/snv/cooccurring_mutations.csv")
+        ],
+    output:
+        fname_csv=f"results/all_cooccurring_mutations.csv",
+    conda:
+        "envs/collect_mutations.yaml"
+    script:
+        "./scripts/collect_mutations.py"
+
+
+rule collect_coverage:
+    input:
+        fnames_coverage=[
+            f"results/{sample}/alignment/coverage.tsv"
+            for sample in wastewater_processing.all_samples
+        ],
+    output:
+        fname_all_coverage=f"results/samples.all_coverage.csv",
+    params:
+        samples=wastewater_processing.all_samples,
+    conda:
+        "../../../workflow/envs/annotate_vcf.yaml"
+    script:
+        "./scripts/collect_coverage.py"
